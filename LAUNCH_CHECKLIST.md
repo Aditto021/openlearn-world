@@ -1,0 +1,25 @@
+# Launch Checklist
+
+- [ ] Production domain configured
+- [ ] Netlify build successful
+- [ ] Environment variables configured
+- [ ] Supabase configured, if accounts are enabled
+- [ ] Google OAuth configured, if enabled
+- [ ] Redirect URLs configured
+- [ ] Database policies enabled
+- [ ] Password reset tested
+- [ ] Email verification tested
+- [ ] Mobile and desktop tested
+- [ ] Dark mode tested
+- [ ] Offline mode tested
+- [ ] Accessibility tested
+- [ ] SEO tested
+- [ ] 404 tested
+- [ ] Forms tested
+- [ ] Privacy reviewed
+- [ ] Terms reviewed
+- [ ] Child safety reviewed
+- [ ] Advertising policy reviewed
+- [ ] Real contact email configured
+- [ ] Analytics reviewed
+- [ ] Final content review completed

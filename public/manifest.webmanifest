@@ -1,0 +1,12 @@
+{
+  "name": "OpenLearn World",
+  "short_name": "OpenLearn",
+  "description": "Free, offline-first learning for children everywhere.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f5ef",
+  "theme_color": "#203b35",
+  "lang": "en",
+  "categories": ["education", "kids"],
+  "orientation": "any"
+}

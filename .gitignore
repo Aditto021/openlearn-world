@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+.env
+.env.*
+!.env.example
+.netlify/
+npm-debug.log*
+data/users-local.json
+.DS_Store

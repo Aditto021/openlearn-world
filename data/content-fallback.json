@@ -1,0 +1,7 @@
+{
+  "lessons": [
+    {"slug":"computer-thinking","title":"How Computers Think","category":"Computers","description":"Learn about input, processing, memory, and output through a friendly example.","difficulty":"Starter","duration":10,"language":"English","published":true},
+    {"slug":"science-electricity","title":"How Does Electricity Work?","category":"Science","description":"Meet the invisible movement that powers a light, a phone, and a school.","difficulty":"Starter","duration":9,"language":"English","published":true},
+    {"slug":"history-writing","title":"The Story of Ancient Civilizations","category":"History","description":"How early cities, writing, and trade helped communities grow.","difficulty":"Growing","duration":12,"language":"English","published":true}
+  ]
+}
