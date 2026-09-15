@@ -209,12 +209,13 @@ const mentorRateLimit = (req, res, next) => {
 };
 
 const GEMINI_MODEL = 'gemini-3.6-flash';
-async function callGemini(prompt) {
+async function callGemini(prompt, timeoutMs = 15000) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return null;
   const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    signal: AbortSignal.timeout(timeoutMs),
     body: JSON.stringify({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       generationConfig: { maxOutputTokens: 320, temperature: 0.7, thinkingConfig: { thinkingBudget: 0 } }
@@ -240,6 +241,41 @@ app.post('/api/academy/mentor', mentorRateLimit, async (req, res) => {
   } catch (error) {
     process.stderr.write(`Gemini mentor failed: ${error.message}\n`);
     return res.status(502).json({ error: 'ai_failed', message: 'The AI mentor could not respond right now. Please try again.' });
+  }
+});
+
+const translateAttempts = new Map();
+const translateRateLimit = (req, res, next) => {
+  const key = req.ip || 'unknown'; const now = Date.now(); const current = translateAttempts.get(key);
+  if (!current || now > current.resetAt) { translateAttempts.set(key, { count: 1, resetAt: now + 15 * 60 * 1000 }); return next(); }
+  if (current.count >= 120) return res.status(429).json({ error: 'too_many_attempts', message: 'Too many translation requests. Please wait a few minutes.' });
+  current.count += 1; return next();
+};
+
+function extractJsonArray(text) {
+  const trimmed = text.trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
+  const start = trimmed.indexOf('[');
+  const end = trimmed.lastIndexOf(']');
+  if (start === -1 || end === -1 || end < start) throw new Error('No JSON array found in AI response');
+  return JSON.parse(trimmed.slice(start, end + 1));
+}
+
+app.post('/api/translate', translateRateLimit, async (req, res) => {
+  const texts = Array.isArray(req.body.texts) ? req.body.texts.slice(0, 60).map((t) => cleanText(String(t ?? ''), 800)) : [];
+  const target = cleanText(req.body.target, 60);
+  if (!texts.length || !target) return res.status(400).json({ error: 'invalid_request', message: 'texts[] and target are required.' });
+  if (!process.env.GEMINI_API_KEY) return res.status(503).json({ error: 'ai_unconfigured', message: 'Translation is not configured on this server yet.' });
+  try {
+    const prompt = `Translate each of these ${texts.length} short website UI strings into ${target}. Preserve the original order, keep numbers/placeholders/punctuation meaning intact, keep each translation natural and concise for a website interface, and do not translate proper nouns like "OpenLearn World" or "InclusiveCode Academy". Respond with ONLY a JSON array of exactly ${texts.length} translated strings in the same order — no markdown, no explanation.\n\nStrings:\n${JSON.stringify(texts)}`;
+    const reply = await callGemini(prompt);
+    if (!reply) return res.status(502).json({ error: 'translate_failed', message: 'Translation could not run right now.' });
+    let translations;
+    try { translations = extractJsonArray(reply); } catch { return res.json({ translations: texts }); }
+    if (!Array.isArray(translations) || translations.length !== texts.length) return res.json({ translations: texts });
+    return res.json({ translations: translations.map((t) => (typeof t === 'string' ? t : String(t))) });
+  } catch (error) {
+    process.stderr.write(`Translate failed: ${error.message}\n`);
+    return res.status(502).json({ error: 'translate_failed', message: 'Translation could not run right now.' });
   }
 });
 

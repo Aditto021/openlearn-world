@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
+import { initSiteLanguage } from './i18n';
 import './app.css';
 import './production-overrides.css';
 import './theme-fixes.css';
@@ -14,3 +15,4 @@ window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
 };
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><BrowserRouter><App /></BrowserRouter></React.StrictMode>);
+initSiteLanguage();
