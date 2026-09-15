@@ -22,7 +22,12 @@ export const siteLanguages: [string, string][] = [
   ['ur', 'اردو (Urdu)']
 ];
 
-const languageNames: Record<string, string> = Object.fromEntries(siteLanguages);
+// Clean English names sent to the translation API (kept separate from the
+// native-script labels shown in the dropdown, which would be a confusing target string).
+const languageNames: Record<string, string> = {
+  bn: 'Bangla', es: 'Spanish', hi: 'Hindi', ar: 'Arabic', fr: 'French', de: 'German',
+  zh: 'Chinese (Simplified)', ja: 'Japanese', pt: 'Portuguese', ru: 'Russian', ur: 'Urdu'
+};
 
 const originalByNode = new Map<Text, string>();
 const appliedByNode = new Map<Text, string>();
@@ -72,7 +77,7 @@ function setCached(lang: string, text: string, translated: string) {
   try { localStorage.setItem(`${CACHE_PREFIX}${lang}:${hash(text)}`, translated); } catch { /* storage unavailable or full */ }
 }
 
-async function translateBatch(texts: string[], lang: string): Promise<string[]> {
+async function translateBatch(texts: string[], lang: string): Promise<{ translations: string[]; ok: boolean }> {
   try {
     const response = await fetch('/api/translate', {
       method: 'POST',
@@ -80,10 +85,12 @@ async function translateBatch(texts: string[], lang: string): Promise<string[]> 
       body: JSON.stringify({ texts, target: languageNames[lang] || lang })
     });
     const data = await response.json().catch(() => null);
-    if (!response.ok || !data || !Array.isArray(data.translations) || data.translations.length !== texts.length) return texts;
-    return data.translations;
+    if (!response.ok || !data || !Array.isArray(data.translations) || data.translations.length !== texts.length) {
+      return { translations: texts, ok: false };
+    }
+    return { translations: data.translations, ok: true };
   } catch {
-    return texts;
+    return { translations: texts, ok: false };
   }
 }
 
@@ -95,7 +102,7 @@ function applyTranslation(node: Text, original: string, translated: string, lang
   setCached(lang, original, translated);
 }
 
-async function translateNodes(nodes: Text[], lang: string) {
+async function translateNodes(nodes: Text[], lang: string): Promise<boolean> {
   const toFetch: { node: Text; text: string }[] = [];
   for (const node of nodes) {
     const original = node.nodeValue || '';
@@ -108,13 +115,16 @@ async function translateNodes(nodes: Text[], lang: string) {
       toFetch.push({ node, text: original });
     }
   }
+  let allOk = true;
   const chunkSize = 40;
   for (let i = 0; i < toFetch.length; i += chunkSize) {
     const chunk = toFetch.slice(i, i + chunkSize);
     // eslint-disable-next-line no-await-in-loop
-    const translations = await translateBatch(chunk.map((c) => c.text), lang);
+    const { translations, ok } = await translateBatch(chunk.map((c) => c.text), lang);
+    if (!ok) allOk = false;
     chunk.forEach((c, idx) => applyTranslation(c.node, c.text, translations[idx] ?? c.text, lang));
   }
+  return allOk;
 }
 
 function pruneDisconnected() {
@@ -123,16 +133,18 @@ function pruneDisconnected() {
   }
 }
 
+async function flushNow(lang: string): Promise<boolean> {
+  pruneDisconnected();
+  const root = document.getElementById('root');
+  if (!root) return true;
+  const nodes = collectTextNodes(root);
+  if (!nodes.length) return true;
+  return translateNodes(nodes, lang);
+}
+
 function scheduleFlush(lang: string) {
   if (flushTimer) window.clearTimeout(flushTimer);
-  flushTimer = window.setTimeout(() => {
-    flushTimer = null;
-    pruneDisconnected();
-    const root = document.getElementById('root');
-    if (!root) return;
-    const nodes = collectTextNodes(root);
-    if (nodes.length) translateNodes(nodes, lang);
-  }, 200);
+  flushTimer = window.setTimeout(() => { flushTimer = null; flushNow(lang); }, 200);
 }
 
 function setDocumentDirection(lang: string) {
@@ -154,16 +166,17 @@ export function stopAutoTranslate() {
   if (flushTimer) { window.clearTimeout(flushTimer); flushTimer = null; }
 }
 
-export function startAutoTranslate(lang: string) {
+export async function startAutoTranslate(lang: string): Promise<boolean> {
   stopAutoTranslate();
   currentLang = lang;
-  if (lang === 'en') { revertToOriginal(); return; }
+  if (lang === 'en') { revertToOriginal(); return true; }
   const root = document.getElementById('root');
-  if (!root) return;
+  if (!root) return true;
   setDocumentDirection(lang);
-  scheduleFlush(lang);
+  const ok = await flushNow(lang);
   observer = new MutationObserver(() => scheduleFlush(lang));
   observer.observe(root, { childList: true, subtree: true, characterData: true });
+  return ok;
 }
 
 export function getStoredLang(): string {
@@ -178,9 +191,9 @@ export function getCurrentLang(): string {
   return currentLang;
 }
 
-export function setSiteLanguage(lang: string) {
+export async function setSiteLanguage(lang: string): Promise<boolean> {
   setStoredLang(lang);
-  startAutoTranslate(lang);
+  return startAutoTranslate(lang);
 }
 
 export function initSiteLanguage() {

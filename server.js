@@ -209,21 +209,30 @@ const mentorRateLimit = (req, res, next) => {
 };
 
 const GEMINI_MODEL = 'gemini-3.6-flash';
-async function callGemini(prompt, timeoutMs = 15000) {
+async function callGemini(prompt, timeoutMs = 22000) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return null;
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    signal: AbortSignal.timeout(timeoutMs),
-    body: JSON.stringify({
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: { maxOutputTokens: 320, temperature: 0.7, thinkingConfig: { thinkingBudget: 0 } }
-    })
-  });
-  if (!response.ok) throw new Error(`Gemini API responded with ${response.status}`);
-  const data = await response.json();
-  return data.candidates?.[0]?.content?.parts?.map((part) => part.text || '').join('').trim() || null;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: { maxOutputTokens: 320, temperature: 0.7, thinkingConfig: { thinkingBudget: 0 } }
+      })
+    });
+    if (!response.ok) {
+      const errorBody = await response.text().catch(() => '');
+      throw new Error(`Gemini API responded with ${response.status}: ${errorBody.slice(0, 300)}`);
+    }
+    const data = await response.json();
+    return data.candidates?.[0]?.content?.parts?.map((part) => part.text || '').join('').trim() || null;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 app.post('/api/academy/mentor', mentorRateLimit, async (req, res) => {
