@@ -1,0 +1,52 @@
+{
+  "books": [
+    {
+      "slug": "intro-to-creative-coding",
+      "title": "Introduction to Creative Coding with Processing",
+      "author": "InclusiveCode Academy",
+      "description": "A beginner-friendly walkthrough of shapes, motion, color, and interaction using Processing and p5.js — the same ideas taught in the Academy's 8 lessons, in one downloadable guide.",
+      "category": "Programming",
+      "language": "English",
+      "coverEmoji": "🎨",
+      "fileUrl": "/books/intro-to-creative-coding.pdf",
+      "pages": 24,
+      "published": true
+    },
+    {
+      "slug": "web-basics-handbook",
+      "title": "Web Basics Handbook: HTML, CSS & Your First Page",
+      "author": "InclusiveCode Academy",
+      "description": "A friendly reference for building your first web pages — structure with HTML, styling with CSS, and simple interactivity with JavaScript.",
+      "category": "Programming",
+      "language": "English",
+      "coverEmoji": "🌐",
+      "fileUrl": "/books/web-basics-handbook.pdf",
+      "pages": 18,
+      "published": true
+    },
+    {
+      "slug": "thinking-like-a-programmer",
+      "title": "Thinking Like a Programmer: Logic for Beginners",
+      "author": "InclusiveCode Academy",
+      "description": "Learn the core problem-solving habits behind all programming — sequences, loops, conditions, and breaking big problems into small steps.",
+      "category": "Programming",
+      "language": "English",
+      "coverEmoji": "🧩",
+      "fileUrl": "/books/thinking-like-a-programmer.pdf",
+      "pages": 16,
+      "published": true
+    },
+    {
+      "slug": "science-for-curious-minds",
+      "title": "Science for Curious Minds: Everyday Wonders",
+      "author": "InclusiveCode Academy",
+      "description": "Short, friendly explanations of the science behind everyday things — electricity, light, motion, and more — written for young learners.",
+      "category": "Science",
+      "language": "English",
+      "coverEmoji": "🔬",
+      "fileUrl": "/books/science-for-curious-minds.pdf",
+      "pages": 20,
+      "published": true
+    }
+  ]
+}

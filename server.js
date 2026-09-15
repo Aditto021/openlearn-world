@@ -12,10 +12,13 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { OAuth2Client } = require('google-auth-library');
 const fallbackContent = require('./data/content-fallback.json');
+const fallbackBooks = require('./data/books-fallback.json');
 const Content = require('./models/Content');
 const ContactSubmission = require('./models/ContactSubmission');
 const PartnershipRequest = require('./models/PartnershipRequest');
 const User = require('./models/User');
+const Book = require('./models/Book');
+const AcademyProgress = require('./models/AcademyProgress');
 const localUsersPath = path.join(__dirname, 'data', 'users-local.json');
 
 const app = express();
@@ -149,6 +152,94 @@ app.get('/api/content', async (req, res) => {
   } catch (error) {
     process.stderr.write(`Content query failed: ${error.message}\n`);
     return res.status(503).json({ error: 'content_unavailable', message: "We couldn't load live content right now. The offline library remains available." });
+  }
+});
+
+app.get('/api/books', async (req, res) => {
+  const connected = await connectDatabase();
+  if (!connected) return res.json({ source: 'local', books: fallbackBooks.books });
+  try {
+    const query = { published: true };
+    if (req.query.category) query.category = cleanText(req.query.category, 60);
+    const books = await Book.find(query).sort({ updatedAt: -1 }).lean();
+    return res.json({ source: 'mongodb-atlas', books: books.length ? books : fallbackBooks.books });
+  } catch (error) {
+    process.stderr.write(`Books query failed: ${error.message}\n`);
+    return res.status(503).json({ error: 'books_unavailable', message: "We couldn't load the book library right now." });
+  }
+});
+
+app.get('/api/academy/progress', async (req, res) => {
+  const user = await currentUser(req);
+  if (!user) return res.json({ progress: null });
+  const connected = await connectDatabase();
+  if (!connected) return res.json({ progress: null });
+  try {
+    const progress = await AcademyProgress.findOne({ user: user._id }).lean();
+    return res.json({ progress: progress ? { mode: progress.mode, lesson: progress.lesson, code: progress.code, language: progress.language } : null });
+  } catch (error) {
+    process.stderr.write(`Academy progress fetch failed: ${error.message}\n`);
+    return res.status(503).json({ error: 'progress_unavailable', message: 'We could not load your saved progress right now.' });
+  }
+});
+
+app.post('/api/academy/progress', async (req, res) => {
+  const user = await currentUser(req);
+  if (!user) return res.status(401).json({ error: 'sign_in_required', message: 'Sign in to sync your Academy progress across devices.' });
+  const mode = req.body.mode === 'html' ? 'html' : 'p5';
+  const lesson = Number.isInteger(req.body.lesson) && req.body.lesson >= 0 ? req.body.lesson : 0;
+  const code = cleanText(req.body.code, 20000);
+  const language = cleanText(req.body.language, 10) || 'en-US';
+  if (!(await connectDatabase())) return res.status(503).json({ error: 'service_unavailable', message: 'Progress sync is temporarily unavailable. Your work is still saved on this device.' });
+  try {
+    await AcademyProgress.updateOne({ user: user._id }, { $set: { mode, lesson, code, language } }, { upsert: true });
+    return res.json({ ok: true });
+  } catch (error) {
+    process.stderr.write(`Academy progress save failed: ${error.message}\n`);
+    return res.status(500).json({ error: 'save_failed', message: 'We could not sync your progress. Your work is still saved on this device.' });
+  }
+});
+
+const mentorAttempts = new Map();
+const mentorRateLimit = (req, res, next) => {
+  const key = req.ip || 'unknown'; const now = Date.now(); const current = mentorAttempts.get(key);
+  if (!current || now > current.resetAt) { mentorAttempts.set(key, { count: 1, resetAt: now + 15 * 60 * 1000 }); return next(); }
+  if (current.count >= 40) return res.status(429).json({ error: 'too_many_attempts', message: 'The AI mentor is getting a lot of questions from you. Please wait a few minutes.' });
+  current.count += 1; return next();
+};
+
+const GEMINI_MODEL = 'gemini-3.6-flash';
+async function callGemini(prompt) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) return null;
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { maxOutputTokens: 320, temperature: 0.7, thinkingConfig: { thinkingBudget: 0 } }
+    })
+  });
+  if (!response.ok) throw new Error(`Gemini API responded with ${response.status}`);
+  const data = await response.json();
+  return data.candidates?.[0]?.content?.parts?.map((part) => part.text || '').join('').trim() || null;
+}
+
+app.post('/api/academy/mentor', mentorRateLimit, async (req, res) => {
+  const message = cleanText(req.body.message, 600);
+  const code = cleanText(req.body.code, 6000);
+  const mode = req.body.mode === 'html' ? 'html' : 'p5';
+  const lang = cleanText(req.body.lang, 10) || 'en-US';
+  if (!message) return res.status(400).json({ error: 'invalid_request', message: 'A question or message is required.' });
+  if (!process.env.GEMINI_API_KEY) return res.status(503).json({ error: 'ai_unconfigured', message: 'The AI mentor is not configured on this server yet.' });
+  try {
+    const prompt = `You are a friendly, encouraging coding mentor for InclusiveCode Academy, a free global learning platform for beginners. The student is learning ${mode === 'p5' ? 'creative coding with Processing/p5.js' : 'web development with HTML, CSS, and JavaScript'}. Reply in the language of this locale code (use the matching human language, not the code itself): ${lang}. Keep your reply short (2-4 sentences), warm, simple, and encouraging, suitable for a child or beginner learner. Reference their current code when it helps.\n\nStudent's current code:\n\`\`\`\n${code || '(no code yet)'}\n\`\`\`\n\nStudent says: "${message}"`;
+    const reply = await callGemini(prompt);
+    if (!reply) return res.status(502).json({ error: 'ai_failed', message: 'The AI mentor could not respond right now.' });
+    return res.json({ reply });
+  } catch (error) {
+    process.stderr.write(`Gemini mentor failed: ${error.message}\n`);
+    return res.status(502).json({ error: 'ai_failed', message: 'The AI mentor could not respond right now. Please try again.' });
   }
 });
 

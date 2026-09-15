@@ -9,7 +9,9 @@
     "dev": "vite",
     "build": "node scripts/clean-build.js && vite build",
     "seed:content": "node scripts/seed-content.js",
-    "verify": "npm run build && npx tsc --noEmit && node --check server.js && node --check netlify/functions/api.js && node --check models/Content.js && node --check models/ContactSubmission.js && node --check models/PartnershipRequest.js && node --check models/User.js"
+    "seed:books": "node scripts/seed-books.js",
+    "generate:books": "node scripts/generate-placeholder-books.js",
+    "verify": "npm run build && npx tsc --noEmit && node --check server.js && node --check netlify/functions/api.js && node --check models/Content.js && node --check models/ContactSubmission.js && node --check models/PartnershipRequest.js && node --check models/User.js && node --check models/Book.js && node --check models/AcademyProgress.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

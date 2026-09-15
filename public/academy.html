@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="InclusiveCode Academy: learn creative coding and web development with a live editor, an AI mentor, and a free book library." />
+  <title>InclusiveCode Academy | OpenLearn World</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Processing Engine (p5.js) directly loaded -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      background: radial-gradient(1200px 600px at 15% -10%, rgba(16,185,129,0.12), transparent 60%),
+                  radial-gradient(900px 500px at 100% 0%, rgba(56,189,248,0.08), transparent 55%),
+                  #020617;
+    }
+    textarea.code-area {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      tab-size: 2;
+    }
+    .panel-glass { backdrop-filter: blur(6px); }
+    .home-link { transition: color .15s, transform .15s; }
+    .home-link:hover { transform: translateX(-2px); }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 8px; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <!-- Header -->
+  <header class="bg-slate-900/90 panel-glass border-b border-slate-800 px-4 py-3 flex flex-wrap justify-between items-center gap-3 sticky top-0 z-30">
+    <div class="flex items-center gap-3">
+      <a href="/" class="home-link flex items-center gap-1 text-slate-400 hover:text-emerald-300 text-xs font-medium border-r border-slate-800 pr-3 mr-0.5">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> OpenLearn World
+      </a>
+      <span class="bg-emerald-500 text-slate-950 font-bold p-1.5 rounded text-base">⚡</span>
+      <div>
+        <h1 class="text-base font-bold text-white leading-tight">InclusiveCode Academy</h1>
+        <p class="text-xs text-slate-400">Creative Coding (Processing) • Web • AI Phone Mentor</p>
+      </div>
+    </div>
+
+    <!-- Controls Toolbar -->
+    <div class="flex items-center gap-2 flex-wrap text-xs">
+      <!-- Account status -->
+      <div id="account-badge" class="hidden items-center gap-1.5 bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-300">
+        <i data-lucide="user" class="w-3.5 h-3.5 text-emerald-400"></i>
+        <span id="account-badge-text">Guest mode</span>
+      </div>
+
+      <!-- Universal Language Selector -->
+      <div class="flex items-center bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5">
+        <i data-lucide="globe" class="w-3.5 h-3.5 text-slate-400 mr-1.5"></i>
+        <select id="lang-select" onchange="setLanguage(this.value)" class="bg-transparent text-slate-200 outline-none cursor-pointer text-xs">
+          <option value="en-US" class="bg-slate-900">English</option>
+          <option value="bn-BD" class="bg-slate-900">বাংলা (Bengali)</option>
+          <option value="es-ES" class="bg-slate-900">Español (Spanish)</option>
+          <option value="hi-IN" class="bg-slate-900">हिन्दी (Hindi)</option>
+          <option value="ar-SA" class="bg-slate-900">العربية (Arabic)</option>
+          <option value="fr-FR" class="bg-slate-900">Français (French)</option>
+          <option value="de-DE" class="bg-slate-900">Deutsch (German)</option>
+          <option value="zh-CN" class="bg-slate-900">中文 (Chinese)</option>
+          <option value="ja-JP" class="bg-slate-900">日本語 (Japanese)</option>
+          <option value="pt-BR" class="bg-slate-900">Português (Portuguese)</option>
+          <option value="ru-RU" class="bg-slate-900">Русский (Russian)</option>
+          <option value="ur-PK" class="bg-slate-900">اردو (Urdu)</option>
+        </select>
+      </div>
+
+      <!-- Mode Switcher -->
+      <div class="bg-slate-800 p-1 rounded-lg border border-slate-700 flex">
+        <button id="btn-mode-p5" onclick="setMode('p5')" class="px-2.5 py-1 rounded bg-emerald-600 text-white font-medium">🎨 Processing</button>
+        <button id="btn-mode-html" onclick="setMode('html')" class="px-2.5 py-1 rounded text-slate-400 hover:text-white font-medium">🌐 HTML</button>
+      </div>
+
+      <!-- Library -->
+      <button onclick="openLibrary()" class="bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-800 px-2.5 py-1.5 rounded-lg flex items-center gap-1 font-medium transition" title="Free book library">
+        <i data-lucide="library" class="w-3.5 h-3.5"></i> Library
+      </button>
+
+      <!-- Save & Reset Progress Buttons -->
+      <button onclick="saveProgress()" class="bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-700 px-2.5 py-1.5 rounded-lg flex items-center gap-1 font-medium transition" title="Save current work">
+        <i data-lucide="save" class="w-3.5 h-3.5"></i> Save
+      </button>
+      <button onclick="resetProgress()" class="bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-800 px-2.5 py-1.5 rounded-lg flex items-center gap-1 font-medium transition" title="Reset all progress">
+        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset
+      </button>
+
+      <!-- AI Phone Call -->
+      <button onclick="openPhoneCall()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 font-bold shadow-lg shadow-emerald-900/30 transition">
+        <i data-lucide="phone-call" class="w-3.5 h-3.5"></i> Call AI
+      </button>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3 p-3 overflow-hidden">
+
+    <!-- Sidebar: 8 Structured Lessons Track (3 cols) -->
+    <aside class="lg:col-span-3 bg-slate-900/95 panel-glass border border-slate-800 rounded-xl flex flex-col overflow-hidden shadow-xl shadow-black/20">
+      <div class="p-3 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="book-open" class="w-4 h-4 text-emerald-400"></i> Lessons Track
+        </h2>
+        <span id="lesson-progress" class="text-xs bg-slate-800 text-emerald-400 px-2 py-0.5 rounded border border-slate-700">1 / 8</span>
+      </div>
+
+      <!-- Lesson List -->
+      <div class="flex-1 overflow-y-auto p-2.5 space-y-1.5 text-xs" id="lessons-list"></div>
+
+      <!-- Current Lesson Detail Box -->
+      <div class="p-3 bg-slate-950 border-t border-slate-800">
+        <h3 id="cur-lesson-title" class="text-xs font-bold text-emerald-300 mb-1"></h3>
+        <p id="cur-lesson-desc" class="text-xs text-slate-400 leading-relaxed mb-2.5"></p>
+        <button onclick="restoreLessonStarter()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs py-1.5 rounded border border-slate-700 font-medium transition">
+          Load Starter Code
+        </button>
+      </div>
+    </aside>
+
+    <!-- Code Editor Section (5 cols) -->
+    <section class="lg:col-span-5 bg-slate-900/95 panel-glass border border-slate-800 rounded-xl flex flex-col overflow-hidden shadow-xl shadow-black/20">
+      <div class="p-2.5 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+        <span id="editor-title" class="text-xs font-mono font-medium text-slate-300">sketch.js (Processing / p5.js)</span>
+        <button onclick="runCode()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow transition">
+          <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> Run Code
+        </button>
+      </div>
+
+      <!-- Code textarea -->
+      <div class="flex-1 p-2 bg-slate-950 flex flex-col">
+        <textarea id="raw-code" spellcheck="false" class="code-area w-full flex-1 bg-transparent text-emerald-300 text-xs leading-relaxed p-2 outline-none resize-none overflow-auto border border-slate-800 rounded font-mono"></textarea>
+      </div>
+    </section>
+
+    <!-- Preview Canvas & AI Panel (4 cols) -->
+    <section class="lg:col-span-4 flex flex-col gap-3">
+
+      <!-- Canvas Execution Screen -->
+      <div class="flex-1 bg-slate-900/95 panel-glass border border-slate-800 rounded-xl flex flex-col overflow-hidden min-h-[280px] shadow-xl shadow-black/20">
+        <div class="p-2.5 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <i data-lucide="monitor-play" class="w-4 h-4 text-emerald-400"></i> Live Canvas Screen
+          </span>
+          <span id="canvas-status" class="text-xs text-emerald-400 font-mono">● Running</span>
+        </div>
+        <div id="canvas-mount" class="flex-1 bg-black p-2 flex items-center justify-center relative overflow-hidden">
+          <!-- Canvas mounts directly here -->
+        </div>
+      </div>
+
+      <!-- Quick AI Helper & Explainer -->
+      <div class="h-60 bg-slate-900/95 panel-glass border border-slate-800 rounded-xl flex flex-col overflow-hidden shadow-xl shadow-black/20">
+        <div class="p-2 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1">
+            <i data-lucide="bot" class="w-4 h-4"></i> AI Mentor
+          </span>
+          <button onclick="speakAI()" class="text-slate-400 hover:text-emerald-300 text-xs flex items-center gap-1" title="Speak explanation">
+            <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> Read Aloud
+          </button>
+        </div>
+
+        <div id="ai-output" class="flex-1 p-2.5 overflow-y-auto text-xs text-slate-300 space-y-2 leading-relaxed bg-slate-950/40">
+          <div class="bg-slate-800/80 p-2.5 rounded border border-slate-700/60">
+            🤖 <strong>Welcome to Processing!</strong> Click <strong>"Run Code"</strong> to test any sketch, or use <strong>"Call AI"</strong> at the top to talk hands-free.
+          </div>
+        </div>
+
+        <div class="p-2 border-t border-slate-800 flex gap-2">
+          <button onclick="explainCode()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs py-1.5 rounded transition">
+            💡 Explain Code
+          </button>
+          <button onclick="suggestChallenge()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs py-1.5 rounded transition">
+            🎯 Give Challenge
+          </button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Hands-free AI Phone Call Modal -->
+  <div id="phone-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-sm p-6 flex flex-col items-center text-center shadow-2xl relative">
+      <button onclick="closePhoneCall()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="relative my-4 flex items-center justify-center">
+        <div class="w-24 h-24 rounded-full bg-emerald-500/20 animate-ping absolute"></div>
+        <div class="w-20 h-20 rounded-full bg-slate-800 border-2 border-emerald-500 flex items-center justify-center text-3xl z-10">
+          🤖
+        </div>
+      </div>
+
+      <h3 class="text-base font-bold text-white mb-0.5">AI Voice Phone Mentor</h3>
+      <p id="phone-status" class="text-xs text-emerald-400 font-mono mb-3">● Connected & Listening...</p>
+
+      <div id="phone-transcript" class="w-full h-32 bg-slate-950 rounded-xl p-3 text-xs text-slate-300 overflow-y-auto mb-5 text-left border border-slate-800 space-y-1.5">
+        <p class="text-slate-500 italic text-center">Speak freely in your chosen language...</p>
+      </div>
+
+      <div class="flex gap-4">
+        <button onclick="togglePhoneMute()" id="phone-mute-btn" class="p-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-full border border-slate-700">
+          <i data-lucide="mic" class="w-5 h-5"></i>
+        </button>
+        <button onclick="closePhoneCall()" class="px-5 py-3 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-full flex items-center gap-2">
+          <i data-lucide="phone-off" class="w-4 h-4"></i> End Call
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Book Library Modal -->
+  <div id="library-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl relative overflow-hidden">
+      <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/60">
+        <div class="flex items-center gap-2">
+          <i data-lucide="library" class="w-5 h-5 text-sky-400"></i>
+          <div>
+            <h3 class="text-base font-bold text-white leading-tight">Free Book Library</h3>
+            <p class="text-xs text-slate-400">View or download books to learn offline, anytime.</p>
+          </div>
+        </div>
+        <button onclick="closeLibrary()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div id="library-list" class="flex-1 overflow-y-auto p-5 grid sm:grid-cols-2 gap-3 text-left">
+        <p class="text-slate-500 text-xs italic col-span-2 text-center py-8">Loading the library...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 1. Full 8 Comprehensive Lessons in Processing (p5.js) and Web (HTML)
+    const curriculumData = {
+      p5: [
+        {
+          id: 1,
+          title: "1. Canvas & Glowing Circle",
+          desc: "Processing creates visual canvases. Learn setup(), draw(), and make a shape follow your cursor.",
+          code: `function setup() {\n  createCanvas(340, 260);\n}\n\nfunction draw() {\n  background(15, 23, 42);\n  fill(16, 185, 129);\n  noStroke();\n  ellipse(mouseX, mouseY, 45, 45);\n}`
+        },
+        {
+          id: 2,
+          title: "2. Bouncing Ball Physics",
+          desc: "Create motion using variables and bounce off screen edges.",
+          code: `let x = 50;\nlet speed = 4;\n\nfunction setup() {\n  createCanvas(340, 260);\n}\n\nfunction draw() {\n  background(20, 24, 39);\n  fill(250, 204, 21);\n  noStroke();\n  ellipse(x, 130, 40, 40);\n  \n  x += speed;\n  if (x > width - 20 || x < 20) {\n    speed = -speed;\n  }\n}`
+        },
+        {
+          id: 3,
+          title: "3. Interactive Clicker Mini-Game",
+          desc: "Test hitboxes with dist() and score points on click!",
+          code: `let targetX = 150;\nlet targetY = 130;\nlet score = 0;\n\nfunction setup() {\n  createCanvas(340, 260);\n}\n\nfunction draw() {\n  background(15);\n  fill(239, 68, 68);\n  noStroke();\n  ellipse(targetX, targetY, 40, 40);\n  \n  fill(255);\n  textSize(16);\n  text("Score: " + score, 15, 30);\n}\n\nfunction mousePressed() {\n  let d = dist(mouseX, mouseY, targetX, targetY);\n  if (d < 20) {\n    score++;\n    targetX = random(30, 300);\n    targetY = random(30, 230);\n  }\n}`
+        },
+        {
+          id: 4,
+          title: "4. Color Trails & Painting Brush",
+          desc: "Do not clear background every frame to paint freehand art!",
+          code: `function setup() {\n  createCanvas(340, 260);\n  background(10);\n}\n\nfunction draw() {\n  if (mouseIsPressed) {\n    fill(random(255), random(255), random(255));\n    noStroke();\n    ellipse(mouseX, mouseY, 20, 20);\n  }\n}`
+        },
+        {
+          id: 5,
+          title: "5. Keyboard Controlled Player Box",
+          desc: "Use keyIsDown() with ARROW keys to move a character around.",
+          code: `let px = 150;\nlet py = 120;\n\nfunction setup() {\n  createCanvas(340, 260);\n}\n\nfunction draw() {\n  background(20);\n  if (keyIsDown(LEFT_ARROW)) px -= 4;\n  if (keyIsDown(RIGHT_ARROW)) px += 4;\n  if (keyIsDown(UP_ARROW)) py -= 4;\n  if (keyIsDown(DOWN_ARROW)) py += 4;\n  \n  fill(56, 189, 248);\n  rect(px, py, 35, 35, 6);\n}`
+        },
+        {
+          id: 6,
+          title: "6. Sine Wave Particle Waves",
+          desc: "Use trigonometry sin() to create animated mathematical waves.",
+          code: `let angle = 0;\n\nfunction setup() {\n  createCanvas(340, 260);\n}\n\nfunction draw() {\n  background(10, 15, 30);\n  noStroke();\n  for (let x = 20; x < width; x += 25) {\n    let y = 130 + sin(angle + x) * 45;\n    fill(168, 85, 247);\n    ellipse(x, y, 16, 16);\n  }\n  angle += 0.05;\n}`
+        },
+        {
+          id: 7,
+          title: "7. Gravity & Jumping Character",
+          desc: "Implement realistic velocity and gravity acceleration.",
+          code: `let y = 200;\nlet velocity = 0;\nlet gravity = 0.6;\n\nfunction setup() {\n  createCanvas(340, 260);\n}\n\nfunction draw() {\n  background(30);\n  velocity += gravity;\n  y += velocity;\n  if (y > 220) {\n    y = 220;\n    velocity = 0;\n  }\n  fill(234, 179, 8);\n  rect(145, y, 40, 40, 8);\n}\n\nfunction mousePressed() {\n  if (y >= 220) velocity = -12;\n}`
+        },
+        {
+          id: 8,
+          title: "8. 2D Pong Game Prototype",
+          desc: "Complete playable paddle and ball bounce game!",
+          code: `let bx = 160, by = 120, bvx = 3, bvy = 3;\n\nfunction setup() {\n  createCanvas(340, 260);\n}\n\nfunction draw() {\n  background(15);\n  // Ball\n  fill(255);\n  ellipse(bx, by, 16, 16);\n  bx += bvx;\n  by += bvy;\n  if (bx < 8 || bx > width - 8) bvx = -bvx;\n  if (by < 8) bvy = -bvy;\n  \n  // Paddle follows mouse\n  fill(16, 185, 129);\n  rect(mouseX - 30, 240, 60, 10, 4);\n  \n  // Collision with paddle\n  if (by > 232 && bx > mouseX - 30 && bx < mouseX + 30) {\n    bvy = -abs(bvy);\n  }\n  if (by > height) { bx = 160; by = 120; }\n}`
+        }
+      ],
+      html: [
+        {
+          id: 1,
+          title: "1. Web Card & Interactive Button",
+          desc: "Create responsive modern web cards with styled HTML and CSS.",
+          code: `<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { background: #0f172a; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }\n    .card { background: #1e293b; padding: 24px; border-radius: 12px; border: 1px solid #334155; text-align: center; }\n    button { background: #10b981; color: black; font-weight: bold; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }\n  </style>\n</head>\n<body>\n  <div class="card">\n    <h2>Hello Web! 🚀</h2>\n    <p style="color:#94a3b8;font-size:13px;">Built in pure HTML & CSS.</p>\n    <button onclick="alert('Congratulations!')">Click Me</button>\n  </div>\n</body>\n</html>`
+        }
+      ]
+    };
+
+    let curMode = 'p5';
+    let curLesson = 0;
+    let curLang = 'en-US';
+    let p5Instance = null;
+    let lastAiMsg = "Welcome! Press Run Code or Call AI to begin.";
+    let currentUserInfo = null;
+    let cloudSyncedOnce = false;
+
+    // 2. Lifecycle
+    window.addEventListener('DOMContentLoaded', async () => {
+      lucide.createIcons();
+      loadSavedState();
+      await checkAuth();
+      await loadCloudProgress();
+      renderSidebar();
+      loadLessonToEditor();
+      runCode();
+    });
+
+    // Backend: auth status
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        const data = res.ok ? await res.json() : { user: null };
+        currentUserInfo = data.user || null;
+      } catch (e) { currentUserInfo = null; }
+      const badge = document.getElementById('account-badge');
+      const text = document.getElementById('account-badge-text');
+      badge.classList.remove('hidden');
+      badge.classList.add('flex');
+      if (currentUserInfo) {
+        text.textContent = `${currentUserInfo.name} · synced`;
+        badge.title = 'Signed in — your progress syncs across devices';
+      } else {
+        text.textContent = 'Guest · sign in to sync';
+        badge.title = 'Saved on this device only. Sign in on OpenLearn World to sync progress across devices.';
+        badge.onclick = () => { window.location.href = '/login'; };
+        badge.classList.add('cursor-pointer', 'hover:border-emerald-600');
+      }
+    }
+
+    // Backend: load progress saved in MongoDB (signed-in users only)
+    async function loadCloudProgress() {
+      if (!currentUserInfo) return;
+      try {
+        const res = await fetch('/api/academy/progress', { credentials: 'include' });
+        const data = res.ok ? await res.json() : { progress: null };
+        if (data.progress) {
+          curMode = data.progress.mode || curMode;
+          curLesson = data.progress.lesson || 0;
+          curLang = data.progress.language || curLang;
+          document.getElementById('lang-select').value = curLang;
+          const p5Btn = document.getElementById('btn-mode-p5');
+          const htmlBtn = document.getElementById('btn-mode-html');
+          if (curMode === 'html') {
+            htmlBtn.className = "px-2.5 py-1 rounded bg-emerald-600 text-white font-medium";
+            p5Btn.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white font-medium";
+            document.getElementById('editor-title').textContent = "index.html (HTML / CSS / JS)";
+          }
+          cloudSyncedOnce = true;
+          if (data.progress.code) {
+            setTimeout(() => { document.getElementById('raw-code').value = data.progress.code; }, 0);
+          }
+        }
+      } catch (e) { /* fall back silently to local state */ }
+    }
+
+    // 3. Save & Reset Progress
+    async function saveProgress() {
+      const currentCode = document.getElementById('raw-code').value;
+      localStorage.setItem('inclusive_code_saved_code', currentCode);
+      localStorage.setItem('inclusive_code_saved_lesson', curLesson);
+      localStorage.setItem('inclusive_code_saved_mode', curMode);
+      localStorage.setItem('inclusive_code_saved_lang', curLang);
+
+      if (currentUserInfo) {
+        try {
+          const res = await fetch('/api/academy/progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ mode: curMode, lesson: curLesson, code: currentCode, language: curLang })
+          });
+          if (res.ok) { alert('✅ Progress saved to your account and synced across devices!'); return; }
+        } catch (e) { /* fall through to local-only confirmation */ }
+        alert('✅ Saved on this device. Cloud sync will retry the next time you save.');
+        return;
+      }
+      alert('✅ Progress and code saved on this device! Sign in on OpenLearn World to sync across devices.');
+    }
+
+    function resetProgress() {
+      if (confirm("Reset all progress back to Lesson 1?")) {
+        localStorage.clear();
+        curLesson = 0;
+        curMode = 'p5';
+        setMode('p5');
+        renderSidebar();
+        loadLessonToEditor();
+        runCode();
+        alert('🔄 Progress has been reset!');
+      }
+    }
+
+    function loadSavedState() {
+      const savedLesson = localStorage.getItem('inclusive_code_saved_lesson');
+      const savedMode = localStorage.getItem('inclusive_code_saved_mode');
+      const savedLang = localStorage.getItem('inclusive_code_saved_lang');
+      if (savedLesson) curLesson = parseInt(savedLesson, 10);
+      if (savedMode) curMode = savedMode;
+      if (savedLang) {
+        curLang = savedLang;
+        document.getElementById('lang-select').value = curLang;
+      }
+    }
+
+    // 4. Mode & Language Switchers
+    function setMode(mode) {
+      curMode = mode;
+      curLesson = 0;
+      const p5Btn = document.getElementById('btn-mode-p5');
+      const htmlBtn = document.getElementById('btn-mode-html');
+      const editorTitle = document.getElementById('editor-title');
+
+      if (mode === 'p5') {
+        p5Btn.className = "px-2.5 py-1 rounded bg-emerald-600 text-white font-medium";
+        htmlBtn.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white font-medium";
+        editorTitle.textContent = "sketch.js (Processing / p5.js)";
+      } else {
+        htmlBtn.className = "px-2.5 py-1 rounded bg-emerald-600 text-white font-medium";
+        p5Btn.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white font-medium";
+        editorTitle.textContent = "index.html (HTML / CSS / JS)";
+      }
+      renderSidebar();
+      loadLessonToEditor();
+      runCode();
+    }
+
+    function setLanguage(lang) {
+      curLang = lang;
+      renderSidebar();
+      const aiBox = document.getElementById('ai-output');
+      aiBox.innerHTML += `<div class="bg-slate-800/80 p-2 rounded text-emerald-300">🌐 Language set to: ${lang}</div>`;
+      aiBox.scrollTop = aiBox.scrollHeight;
+    }
+
+    // 5. Sidebar & Lesson Loader
+    function renderSidebar() {
+      const container = document.getElementById('lessons-list');
+      container.innerHTML = '';
+      const list = curriculumData[curMode];
+
+      list.forEach((item, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left p-2 rounded text-xs font-medium transition flex items-center justify-between border ${
+          idx === curLesson
+            ? 'bg-emerald-950 border-emerald-500/60 text-emerald-300'
+            : 'bg-slate-800/50 border-slate-700/40 text-slate-400 hover:bg-slate-800'
+        }`;
+        btn.innerHTML = `<span>${item.title}</span> <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>`;
+        btn.onclick = () => {
+          curLesson = idx;
+          renderSidebar();
+          loadLessonToEditor();
+          runCode();
+        };
+        container.appendChild(btn);
+      });
+
+      document.getElementById('lesson-progress').textContent = `${curLesson + 1} / ${list.length}`;
+      lucide.createIcons();
+    }
+
+    function loadLessonToEditor() {
+      const lesson = curriculumData[curMode][curLesson] || curriculumData[curMode][0];
+      document.getElementById('cur-lesson-title').textContent = lesson.title;
+      document.getElementById('cur-lesson-desc').textContent = lesson.desc;
+      document.getElementById('raw-code').value = lesson.code;
+    }
+
+    function restoreLessonStarter() {
+      loadLessonToEditor();
+      runCode();
+    }
+
+    // 6. Direct Native Execution Engine
+    function runCode() {
+      const code = document.getElementById('raw-code').value;
+      const mount = document.getElementById('canvas-mount');
+      const status = document.getElementById('canvas-status');
+
+      if (p5Instance) {
+        try { p5Instance.remove(); } catch (e) {}
+        p5Instance = null;
+      }
+      mount.innerHTML = '';
+
+      if (curMode === 'p5') {
+        try {
+          const sketch = new Function('p', `
+            with (p) {
+              ${code}
+              if (typeof setup === 'function') p.setup = setup;
+              if (typeof draw === 'function') p.draw = draw;
+              if (typeof mousePressed === 'function') p.mousePressed = mousePressed;
+              if (typeof mouseReleased === 'function') p.mouseReleased = mouseReleased;
+              if (typeof keyPressed === 'function') p.keyPressed = keyPressed;
+            }
+          `);
+
+          p5Instance = new p5(sketch, mount);
+          status.textContent = "● Running (Processing)";
+          status.className = "text-xs text-emerald-400 font-mono";
+        } catch (err) {
+          mount.innerHTML = `<pre class="text-rose-400 text-xs p-3 font-mono">Syntax Error: ${err.message}</pre>`;
+          status.textContent = "● Error";
+          status.className = "text-xs text-rose-400 font-mono";
+        }
+      } else {
+        const frame = document.createElement('iframe');
+        frame.className = 'w-full h-full border-0 rounded bg-slate-950';
+        mount.appendChild(frame);
+        frame.srcdoc = code;
+        status.textContent = "● Running (HTML)";
+        status.className = "text-xs text-emerald-400 font-mono";
+      }
+    }
+
+    // 7. AI Mentoring & Speech (backend-powered, Gemini, with scripted fallback)
+    function appendAiMessage(html) {
+      const box = document.getElementById('ai-output');
+      box.innerHTML += `<div class="bg-slate-800/80 p-2.5 rounded border border-slate-700/60">${html}</div>`;
+      box.scrollTop = box.scrollHeight;
+      return box.lastElementChild;
+    }
+
+    function scriptedExplain(code) {
+      let exp = "🤖 <strong>Code Summary:</strong><br>";
+      if (code.includes('createCanvas')) exp += "• <code>createCanvas(w, h)</code> builds your game drawing board.<br>";
+      if (code.includes('background')) exp += "• <code>background()</code> repaints the canvas every cycle.<br>";
+      if (code.includes('ellipse')) exp += "• <code>ellipse()</code> renders smooth circles or balls.<br>";
+      if (code.includes('dist')) exp += "• <code>dist()</code> calculates distance for game collisions!<br>";
+      if (code.includes('button')) exp += "• <code>&lt;button&gt;</code> triggers interactive click events.";
+      return exp;
+    }
+
+    const fallbackChallenges = [
+      "🎯 Change the color of your shape using RGB numbers in `fill()`!",
+      "🎯 Make the shape move 2x faster by increasing the speed variable!",
+      "🎯 Add a score counter that increases whenever your mouse touches the target!",
+      "🎯 Add a second bouncing ball that moves vertically!"
+    ];
+
+    async function askMentor(message, code) {
+      const res = await fetch('/api/academy/mentor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ message, code, mode: curMode, lang: curLang })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.reply) throw new Error(data.message || 'AI mentor unavailable');
+      return data.reply;
+    }
+
+    async function explainCode() {
+      const code = document.getElementById('raw-code').value;
+      const thinking = appendAiMessage('🤖 <span class="text-slate-400">Thinking through your code...</span>');
+      try {
+        const reply = await askMentor('Explain what this code does, in simple and encouraging terms for a beginner.', code);
+        lastAiMsg = reply;
+        thinking.innerHTML = `🤖 ${reply}`;
+      } catch (e) {
+        const exp = scriptedExplain(code);
+        lastAiMsg = exp;
+        thinking.innerHTML = exp;
+      }
+    }
+
+    async function suggestChallenge() {
+      const code = document.getElementById('raw-code').value;
+      const thinking = appendAiMessage('🤖 <span class="text-slate-400">Coming up with a challenge...</span>');
+      try {
+        const reply = await askMentor('Give me one short, fun, achievable coding challenge I can try next, based on my current code.', code);
+        lastAiMsg = reply;
+        thinking.innerHTML = `🤖 ${reply}`;
+      } catch (e) {
+        const ch = fallbackChallenges[Math.floor(Math.random() * fallbackChallenges.length)];
+        lastAiMsg = ch;
+        thinking.innerHTML = ch;
+      }
+    }
+
+    function speakAI() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const clean = lastAiMsg.replace(/<[^>]*>?/gm, '');
+        const utter = new SpeechSynthesisUtterance(clean);
+        utter.lang = curLang;
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    // 8. Hands-free AI Phone Call
+    let phoneActive = false;
+    let recognizer = null;
+    let phoneMuted = false;
+
+    function openPhoneCall() {
+      const modal = document.getElementById('phone-modal');
+      const transcript = document.getElementById('phone-transcript');
+      modal.classList.remove('hidden');
+      transcript.innerHTML = `<p class="text-emerald-400">📞 Connected! Ask questions in any language...</p>`;
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Speech recognition requires Chrome, Edge, or Safari.");
+        closePhoneCall();
+        return;
+      }
+
+      phoneActive = true;
+      recognizer = new SpeechRecognition();
+      recognizer.lang = curLang;
+      recognizer.continuous = true;
+
+      recognizer.onresult = async (event) => {
+        if (phoneMuted) return;
+        const text = event.results[event.results.length - 1][0].transcript;
+        transcript.innerHTML += `<p class="mt-1 text-slate-200"><strong>You:</strong> "${text}"</p>`;
+        transcript.scrollTop = transcript.scrollHeight;
+
+        const thinkingEl = document.createElement('p');
+        thinkingEl.className = 'mt-1 text-slate-500 italic';
+        thinkingEl.textContent = '🤖 Mentor is thinking...';
+        transcript.appendChild(thinkingEl);
+        transcript.scrollTop = transcript.scrollHeight;
+
+        let reply;
+        try {
+          reply = await askMentor(text, document.getElementById('raw-code').value);
+        } catch (e) {
+          const lower = text.toLowerCase();
+          reply = `That is a great question about "${text}". Try modifying your canvas code and press Run Code!`;
+          if (lower.includes('circle') || lower.includes('ball') || lower.includes('বৃত্ত')) {
+            reply = "To create a circle in Processing, use ellipse(x, y, width, height).";
+          } else if (lower.includes('color') || lower.includes('রং')) {
+            reply = "To change colors, call fill(R, G, B) before drawing your shape!";
+          }
+        }
+
+        thinkingEl.remove();
+        transcript.innerHTML += `<p class="mt-1 text-emerald-300"><strong>🤖 Mentor:</strong> ${reply}</p>`;
+        transcript.scrollTop = transcript.scrollHeight;
+
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const ut = new SpeechSynthesisUtterance(reply);
+          ut.lang = curLang;
+          window.speechSynthesis.speak(ut);
+        }
+      };
+
+      try { recognizer.start(); } catch(e){}
+    }
+
+    function togglePhoneMute() {
+      phoneMuted = !phoneMuted;
+      const btn = document.getElementById('phone-mute-btn');
+      btn.innerHTML = phoneMuted ? `<i data-lucide="mic-off" class="w-5 h-5 text-red-400"></i>` : `<i data-lucide="mic" class="w-5 h-5"></i>`;
+      lucide.createIcons();
+    }
+
+    function closePhoneCall() {
+      phoneActive = false;
+      if (recognizer) try { recognizer.stop(); } catch(e){}
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('phone-modal').classList.add('hidden');
+    }
+
+    // 9. Book Library
+    let booksCache = null;
+
+    async function openLibrary() {
+      document.getElementById('library-modal').classList.remove('hidden');
+      if (!booksCache) await loadBooks();
+    }
+
+    function closeLibrary() {
+      document.getElementById('library-modal').classList.add('hidden');
+    }
+
+    async function loadBooks() {
+      const list = document.getElementById('library-list');
+      try {
+        const res = await fetch('/api/books');
+        const data = await res.json();
+        booksCache = data.books || [];
+        if (!booksCache.length) {
+          list.innerHTML = '<p class="text-slate-500 text-xs italic col-span-2 text-center py-8">No books published yet. Check back soon!</p>';
+          return;
+        }
+        list.innerHTML = booksCache.map((book) => `
+          <div class="bg-slate-800/60 border border-slate-700 rounded-xl p-4 flex flex-col gap-2">
+            <div class="flex items-start gap-2.5">
+              <span class="text-2xl">${book.coverEmoji || '📘'}</span>
+              <div class="min-w-0">
+                <h4 class="text-sm font-bold text-white leading-snug">${book.title}</h4>
+                <p class="text-[11px] text-slate-400">by ${book.author}${book.pages ? ` · ${book.pages} pages` : ''}</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed flex-1">${book.description}</p>
+            <div class="flex gap-2 pt-1">
+              <a href="${book.fileUrl}" target="_blank" rel="noopener" class="flex-1 text-center bg-slate-700/70 hover:bg-slate-700 text-slate-200 text-xs py-1.5 rounded transition">View</a>
+              <a href="${book.fileUrl}" download class="flex-1 text-center bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-1.5 rounded transition">Download</a>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        list.innerHTML = '<p class="text-rose-400 text-xs col-span-2 text-center py-8">Could not load the library right now. Please try again.</p>';
+      }
+    }
+  </script>
+</body>
+</html>
