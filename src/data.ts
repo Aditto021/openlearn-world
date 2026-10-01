@@ -22,6 +22,7 @@ export const techCategories: { name: string; emoji: string; description: string;
   { name: 'Game Development', emoji: '🎮', description: 'Learn the secret recipe behind every video game.', tone: 'lavender', href: '/tech/gamedev.html' },
   { name: 'Roblox Studio', emoji: '🟥', description: 'Write tiny bits of code to bring your world to life.', tone: 'rose', href: '/tech/roblox.html' },
   { name: 'Processing', emoji: '🖌️', description: 'Draw shapes and animations with code — watch them come alive instantly!', tone: 'yellow', href: '/tech/processing.html' },
+  { name: 'Canva', emoji: '🖍️', description: 'Design posters, cards, and logos in your browser — free, no install needed!', tone: 'blue', href: '/tech/canva.html' },
   { name: 'InclusiveCode Academy', emoji: '🎨', description: 'Draw with code and watch it move on screen!', tone: 'green', href: '/academy.html' }
 ];
 
