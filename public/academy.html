@@ -28,6 +28,9 @@
     .home-link:hover { transform: translateX(-2px); }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 8px; }
+    .ptt-btn { touch-action: manipulation; -webkit-user-select: none; }
+    .ptt-btn.ptt-recording { background: #dc2626; border-color: #f87171; animation: pttPulse 1s ease-in-out infinite; }
+    @keyframes pttPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,.55); } 50% { box-shadow: 0 0 0 10px rgba(220,38,38,0); } }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
@@ -179,6 +182,11 @@
             🎯 Give Challenge
           </button>
         </div>
+        <div class="px-2 pb-2">
+          <button id="ptt-btn" class="ptt-btn w-full bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-500/60 text-xs py-2 rounded-full flex items-center justify-center gap-1.5 transition select-none" title="Press and hold, speak your question, then let go to send it">
+            <i data-lucide="mic" class="w-4 h-4"></i> <span id="ptt-label">Hold to Ask</span>
+          </button>
+        </div>
       </div>
 
     </section>
@@ -317,6 +325,7 @@
       renderSidebar();
       loadLessonToEditor();
       runCode();
+      setupPTTButton();
     });
 
     // Backend: auth status
@@ -678,6 +687,79 @@
       if (recognizer) try { recognizer.stop(); } catch(e){}
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       document.getElementById('phone-modal').classList.add('hidden');
+    }
+
+    // 8b. "Hold to Ask" push-to-talk mic button — press and hold, speak,
+    // release to send (same gesture as the voice-message button in
+    // WhatsApp/Messenger), for a quick one-off question without opening
+    // the full hands-free phone call.
+    let pttRecognizer = null;
+    let pttActive = false;
+
+    function setPttUi(recording) {
+      const btn = document.getElementById('ptt-btn');
+      const label = document.getElementById('ptt-label');
+      if (!btn || !label) return;
+      btn.classList.toggle('ptt-recording', recording);
+      label.textContent = recording ? 'Listening… release to send' : 'Hold to Ask';
+    }
+
+    function startPTT(e) {
+      if (e) e.preventDefault();
+      if (pttActive) return;
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        appendAiMessage('🎤 Voice input needs Chrome, Edge, or Safari on this device.');
+        return;
+      }
+      pttActive = true;
+      setPttUi(true);
+      let finalText = '';
+      pttRecognizer = new SpeechRecognition();
+      pttRecognizer.lang = curLang;
+      pttRecognizer.continuous = false;
+      pttRecognizer.interimResults = false;
+      pttRecognizer.onresult = (event) => { finalText = event.results[0][0].transcript; };
+      pttRecognizer.onerror = () => { /* handled in onend */ };
+      pttRecognizer.onend = () => {
+        pttActive = false;
+        setPttUi(false);
+        if (finalText.trim()) sendMentorVoiceMessage(finalText.trim());
+      };
+      try { pttRecognizer.start(); } catch (e2) { pttActive = false; setPttUi(false); }
+    }
+
+    function stopPTT() {
+      if (pttRecognizer && pttActive) { try { pttRecognizer.stop(); } catch (e) {} }
+    }
+
+    async function sendMentorVoiceMessage(text) {
+      appendAiMessage(`🎤 <strong>You asked:</strong> "${text}"`);
+      const thinking = appendAiMessage('🤖 <span class="text-slate-400">Thinking through your question...</span>');
+      let reply;
+      try {
+        reply = await askMentor(text, document.getElementById('raw-code').value);
+      } catch (e) {
+        reply = `That's a great question about "${text}" — try it out in the editor and press Run Code!`;
+      }
+      lastAiMsg = reply;
+      thinking.innerHTML = `🤖 ${reply}`;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const clean = reply.replace(/<[^>]*>?/gm, '');
+        const ut = new SpeechSynthesisUtterance(clean);
+        ut.lang = curLang;
+        window.speechSynthesis.speak(ut);
+      }
+    }
+
+    function setupPTTButton() {
+      const btn = document.getElementById('ptt-btn');
+      if (!btn) return;
+      btn.addEventListener('mousedown', startPTT);
+      btn.addEventListener('touchstart', startPTT, { passive: false });
+      ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach((evt) => btn.addEventListener(evt, stopPTT));
+      window.addEventListener('mouseup', stopPTT);
     }
 
     // 9. Book Library
