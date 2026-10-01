@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Roblox Studio Course | Tech Hub</title>
+<meta name="description" content="Install Roblox Studio, learn Luau scripting basics with real examples, and publish your first experience." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/tech/theme.css" />
+<link rel="stylesheet" href="/tech/circuit.css" />
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="tech-body">
+
+<nav class="tech-nav">
+  <div class="brand"><span class="dot"></span> Tech Hub</div>
+  <a href="/" class="home-btn"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> OpenLearn World</a>
+  <div class="crumbs"><a href="/tech/index.html">Tech Hub</a> <i data-lucide="chevron-right" style="width:13px;height:13px"></i> <span style="color:var(--ink)">Roblox Studio</span></div>
+  <div class="links">
+    <a href="/tech/gamedev.html">Game Dev</a>
+    <a href="/tech/roblox.html" class="active">Roblox Studio</a>
+  </div>
+</nav>
+
+<header class="tech-hero" style="padding:70px 0 40px">
+  <div class="aura"><span></span><span></span><span></span></div>
+  <div class="tech-shell" style="position:relative;z-index:1">
+    <span class="eyebrow-pill reveal in"><span class="pulse"></span> Free &middot; Luau scripting &middot; instant publishing</span>
+    <h1 class="reveal in" style="font-size:clamp(32px,4.6vw,54px)">Script and <em>publish</em>.</h1>
+    <p class="lead reveal in">Roblox Studio is a free desktop app — it can’t be embedded or controlled from a web page (no website can do that, honestly, including this one). What this page gives you instead: the real install link, real Luau code, and the real steps to publish.</p>
+  </div>
+</header>
+
+<main class="tech-shell">
+
+  <section class="tech-section reveal" id="install" style="padding-top:10px">
+    <div class="glass" style="padding:34px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(248,113,113,.08),rgba(251,146,60,.06))">
+      <div>
+        <span class="eyebrow-pill" style="margin-bottom:12px"><i data-lucide="download" style="width:12px;height:12px"></i> Official install</span>
+        <h2 style="font-size:26px">Get Roblox Studio, free.</h2>
+        <p style="color:var(--muted);margin-top:8px;max-width:480px">Download directly from Roblox — you’ll need a free Roblox account to save and publish.</p>
+      </div>
+      <a href="https://create.roblox.com/" target="_blank" rel="noopener" class="btn btn-primary" style="white-space:nowrap"><i data-lucide="download" style="width:16px;height:16px"></i> Open create.roblox.com</a>
+    </div>
+  </section>
+
+  <section class="tech-section reveal" id="hierarchy">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="folder-tree" style="width:12px;height:12px"></i> How a place is organized</span><h2>The Explorer hierarchy.</h2><p>Everything in Roblox Studio lives in a tree, visible in the Explorer panel. Knowing where things go is most of learning the tool.</p></div>
+    <div class="glass" style="padding:22px">
+      <svg viewBox="0 0 700 300" style="width:100%;height:auto">
+        <text x="10" y="24" fill="#17181a" font-size="13" font-family="monospace" font-weight="bold">game</text>
+        <text x="30" y="50" fill="#2f8f5c" font-size="12" font-family="monospace" font-weight="700">▸ Workspace</text>
+        <text x="50" y="72" fill="#666a70" font-size="11" font-family="monospace">— the visible 3D world: Parts, Models, Terrain</text>
+        <text x="30" y="98" fill="#7c3aed" font-size="12" font-family="monospace" font-weight="700">▸ ServerScriptService</text>
+        <text x="50" y="120" fill="#666a70" font-size="11" font-family="monospace">— Script objects: server-side game logic</text>
+        <text x="30" y="146" fill="#9c7209" font-size="12" font-family="monospace" font-weight="700">▸ StarterPlayer → StarterPlayerScripts</text>
+        <text x="50" y="168" fill="#666a70" font-size="11" font-family="monospace">— LocalScript objects: run on each player’s device</text>
+        <text x="30" y="194" fill="#2b7d74" font-size="12" font-family="monospace" font-weight="700">▸ ReplicatedStorage</text>
+        <text x="50" y="216" fill="#666a70" font-size="11" font-family="monospace">— ModuleScripts and assets shared by server + clients</text>
+        <text x="30" y="242" fill="#c23b4a" font-size="12" font-family="monospace" font-weight="700">▸ StarterGui</text>
+        <text x="50" y="264" fill="#666a70" font-size="11" font-family="monospace">— UI: ScreenGuis, buttons, text labels</text>
+      </svg>
+    </div>
+  </section>
+
+  <section class="tech-section reveal" id="scripting">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="terminal" style="width:12px;height:12px"></i> Luau basics</span><h2>Real scripts you can paste in.</h2><p>Luau is Roblox’s own fast dialect of Lua. Right-click a service in the Explorer → Insert Object → Script (or LocalScript) to add one.</p></div>
+    <div class="lesson-tabs" id="robloxTabs"></div>
+    <div class="lesson-body glass" id="robloxBody"></div>
+  </section>
+
+  <section class="tech-section reveal" id="publish">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="upload" style="width:12px;height:12px"></i> Ship it</span><h2>Publishing your first experience.</h2></div>
+    <ol class="step-list">
+      <li><b>Build something</b> in the Workspace — even a single colored Part with a script counts for your first publish.</li>
+      <li><b>File → Publish to Roblox.</b> Sign in with your Roblox account if prompted.</li>
+      <li><b>Fill in a name, description, and thumbnail.</b> These are shown to anyone who finds your experience.</li>
+      <li><b>Set access</b> (Public or Private) in the experience’s configuration on the Roblox website.</li>
+      <li><b>Playtest it live</b> at the experience’s roblox.com page, or share the link directly.</li>
+    </ol>
+  </section>
+
+  <div class="glass reveal" style="padding:30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin:20px 0 50px">
+    <div><h3>Want the general concepts first?</h3><p style="color:var(--muted);margin-top:6px">The Game Development track covers ideas that apply to Roblox too — the game loop, collisions, state.</p></div>
+    <a href="/tech/gamedev.html" class="btn btn-primary">Go to Game Development <i data-lucide="arrow-right" style="width:15px;height:15px"></i></a>
+  </div>
+</main>
+
+<footer class="tech-footer tech-shell">
+  <div class="row">
+    <span class="status-badge"><span class="dot"></span> Every script below is real, valid Luau</span>
+    <a href="/tech/index.html" style="color:var(--muted);font-size:13px">← Back to Tech Hub</a>
+  </div>
+</footer>
+
+<script src="/tech/theme.js"></script>
+<script src="/tech/roblox-lessons-data.js"></script>
+<script src="/tech/roblox.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

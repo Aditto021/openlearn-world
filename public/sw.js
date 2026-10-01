@@ -1,4 +1,4 @@
-const CACHE_NAME = 'openlearn-world-v5';
+const CACHE_NAME = 'openlearn-world-v6';
 const APP_SHELL = ['/', '/index.html', '/manifest.webmanifest', '/offline.html', '/favicon.svg', '/robots.txt'];
 
 self.addEventListener('install', (event) => {

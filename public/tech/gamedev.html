@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Game Development Course | Tech Hub</title>
+<meta name="description" content="Core game-development concepts, a real playable canvas game with source, and an honest engine comparison." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/tech/theme.css" />
+<link rel="stylesheet" href="/tech/circuit.css" />
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  #gameCanvas { background: #060708; border-radius: 10px; display: block; margin: 0 auto; touch-action: none; }
+  .game-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 10px; }
+  .compare-table th { text-align: left; padding: 12px 14px; background: var(--glass-strong); color: var(--ink); font: 700 11px var(--mono); text-transform: uppercase; }
+  .compare-table td { padding: 12px 14px; border-bottom: 1px solid var(--glass-border); color: var(--ink-soft); vertical-align: top; }
+  .compare-table tr:hover td { background: var(--glass); }
+</style>
+</head>
+<body class="tech-body">
+
+<nav class="tech-nav">
+  <div class="brand"><span class="dot"></span> Tech Hub</div>
+  <a href="/" class="home-btn"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> OpenLearn World</a>
+  <div class="crumbs"><a href="/tech/index.html">Tech Hub</a> <i data-lucide="chevron-right" style="width:13px;height:13px"></i> <span style="color:var(--ink)">Game Development</span></div>
+  <div class="links">
+    <a href="/tech/gamedev.html" class="active">Game Dev</a>
+    <a href="/tech/roblox.html">Roblox Studio</a>
+  </div>
+</nav>
+
+<header class="tech-hero" style="padding:70px 0 40px">
+  <div class="aura"><span></span><span></span><span></span></div>
+  <div class="tech-shell" style="position:relative;z-index:1">
+    <span class="eyebrow-pill reveal in"><span class="pulse"></span> Concepts &middot; playable demo &middot; engine guide</span>
+    <h1 class="reveal in" style="font-size:clamp(32px,4.6vw,54px)">From idea to <em>playable</em>.</h1>
+    <p class="lead reveal in">Every game, in any engine, runs on the same core loop. Learn the concept here first, in plain JavaScript you can read top to bottom — then it’ll make sense in whatever engine you pick.</p>
+  </div>
+</header>
+
+<main class="tech-shell">
+
+  <section class="tech-section reveal" id="loop" style="padding-top:10px">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="repeat" style="width:12px;height:12px"></i> The core idea</span><h2>The game loop.</h2></div>
+    <div class="glass" style="padding:24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center">
+      <div class="glass" style="padding:16px 22px;text-align:center"><b style="color:var(--accent)">1. Input</b><p style="color:var(--muted);font-size:12.5px;margin-top:4px">Read keyboard/mouse/touch</p></div>
+      <i data-lucide="arrow-right" style="width:20px;height:20px;color:var(--muted)"></i>
+      <div class="glass" style="padding:16px 22px;text-align:center"><b style="color:var(--accent-2)">2. Update</b><p style="color:var(--muted);font-size:12.5px;margin-top:4px">Move things, check collisions</p></div>
+      <i data-lucide="arrow-right" style="width:20px;height:20px;color:var(--muted)"></i>
+      <div class="glass" style="padding:16px 22px;text-align:center"><b style="color:var(--accent-3)">3. Render</b><p style="color:var(--muted);font-size:12.5px;margin-top:4px">Draw the new frame</p></div>
+      <i data-lucide="arrow-right" style="width:20px;height:20px;color:var(--muted)"></i>
+      <div class="glass" style="padding:16px 22px;text-align:center"><b style="color:var(--warn)">↻ Repeat</b><p style="color:var(--muted);font-size:12.5px;margin-top:4px">~60 times per second</p></div>
+    </div>
+    <p style="color:var(--muted);font-size:13.5px;margin-top:14px">That’s it. Unity, Godot, Unreal, and Roblox all wrap this exact loop in more tooling — the loop itself never changes.</p>
+  </section>
+
+  <section class="tech-section reveal" id="demo">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="gamepad-2" style="width:12px;height:12px"></i> Try it</span><h2>A real, playable game loop.</h2><p>~70 lines of vanilla JavaScript and a &lt;canvas&gt;. No engine, no libraries — open your browser’s dev tools and read the actual source at /tech/gamedev-game.js.</p></div>
+    <div class="glass game-wrap" style="padding:24px">
+      <canvas id="gameCanvas" width="360" height="420"></canvas>
+      <div style="display:flex;gap:14px;align-items:center">
+        <button class="btn btn-primary" id="gameStart">▶ Start</button>
+        <span class="sim-readout" id="gameScore">Score: 0</span>
+      </div>
+      <p id="gameState" style="color:var(--muted);font-size:13px;text-align:center;max-width:320px"></p>
+    </div>
+  </section>
+
+  <section class="tech-section reveal" id="concepts">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="puzzle" style="width:12px;height:12px"></i> Building blocks</span><h2>Ideas every engine shares.</h2></div>
+    <div class="bento">
+      <div class="glass course-card"><div class="icon-badge">📦</div><h3>Sprites & assets</h3><p>2D images or 3D models that represent characters, items, and scenery — the visual building blocks of a scene.</p></div>
+      <div class="glass course-card"><div class="icon-badge">💥</div><h3>Collision detection</h3><p>Math that checks whether two objects overlap — in the demo above, simple rectangle-vs-rectangle checks (AABB collision).</p></div>
+      <div class="glass course-card"><div class="icon-badge">🎛️</div><h3>State management</h3><p>Tracking "menu", "playing", "paused", "game over" — and what input and rendering should do in each state.</p></div>
+      <div class="glass course-card"><div class="icon-badge">🧠</div><h3>Game design vs. dev</h3><p>Design is deciding what’s fun (rules, pacing, difficulty); development is building it. Both matter — neither is optional.</p></div>
+    </div>
+  </section>
+
+  <section class="tech-section reveal" id="engines">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="scale" style="width:12px;height:12px"></i> Choosing a tool</span><h2>Engines compared, honestly.</h2></div>
+    <div class="glass" style="padding:10px 20px;overflow-x:auto">
+      <table class="compare-table">
+        <thead><tr><th>Engine</th><th>Language</th><th>Cost model</th><th>Best for</th></tr></thead>
+        <tbody>
+          <tr><td><b style="color:var(--ink)">Godot</b></td><td class="mono">GDScript or C#</td><td>Free & open source (MIT), no royalties ever</td><td>Beginners, 2D games, anyone who wants zero cost forever</td></tr>
+          <tr><td><b style="color:var(--ink)">Unity</b></td><td class="mono">C#</td><td>Free tier for small projects/hobbyists; paid tiers at scale</td><td>2D/3D, mobile games, huge tutorial and asset ecosystem</td></tr>
+          <tr><td><b style="color:var(--ink)">Unreal Engine</b></td><td class="mono">C++ / Blueprints (visual)</td><td>Free to use; a royalty applies only after a shipped product earns significant revenue</td><td>High-end 3D graphics, AAA-style visuals</td></tr>
+          <tr><td><b style="color:var(--ink)">Construct</b></td><td class="mono">Visual event system (no code)</td><td>Free tier limited; subscription for full features</td><td>Absolute beginners, fast 2D prototyping in the browser</td></tr>
+          <tr><td><b style="color:var(--ink)">Roblox Studio</b></td><td class="mono">Luau (a Lua dialect)</td><td>Free to build; Roblox’s own economy handles monetization</td><td>Publishing instantly to Roblox’s existing player base</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="glass reveal" style="padding:30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin:20px 0 50px">
+    <div><h3>Want to publish somewhere instantly?</h3><p style="color:var(--muted);margin-top:6px">Roblox Studio lets you script and publish to a built-in audience.</p></div>
+    <a href="/tech/roblox.html" class="btn btn-primary">Go to Roblox Studio <i data-lucide="arrow-right" style="width:15px;height:15px"></i></a>
+  </div>
+</main>
+
+<footer class="tech-footer tech-shell">
+  <div class="row">
+    <span class="status-badge"><span class="dot"></span> Demo game runs real, inspectable source</span>
+    <a href="/tech/index.html" style="color:var(--muted);font-size:13px">← Back to Tech Hub</a>
+  </div>
+</footer>
+
+<script src="/tech/theme.js"></script>
+<script src="/tech/gamedev-game.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

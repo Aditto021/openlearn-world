@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Processing (p5.js) Course | Tech Hub</title>
+<meta name="description" content="Learn creative coding with Processing's free web sibling, p5.js — draw shapes, animate, and build interactive art with a live preview for every lesson." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/tech/theme.css" />
+<link rel="stylesheet" href="/tech/circuit.css" />
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="tech-body">
+
+<nav class="tech-nav">
+  <div class="brand"><span class="dot"></span> Tech Hub</div>
+  <a href="/" class="home-btn"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> OpenLearn World</a>
+  <div class="crumbs"><a href="/tech/index.html">Tech Hub</a> <i data-lucide="chevron-right" style="width:13px;height:13px"></i> <span style="color:var(--ink)">Processing</span></div>
+  <div class="links">
+    <a href="/academy.html">InclusiveCode Academy</a>
+    <a href="/tech/processing.html" class="active">Processing</a>
+  </div>
+</nav>
+
+<header class="tech-hero" style="padding:70px 0 40px">
+  <div class="aura"><span></span><span></span><span></span></div>
+  <div class="tech-shell" style="position:relative;z-index:1">
+    <span class="eyebrow-pill reveal in"><span class="pulse"></span> Free &middot; Creative coding &middot; live preview</span>
+    <h1 class="reveal in" style="font-size:clamp(32px,4.6vw,54px)">Draw with <em>code</em>.</h1>
+    <p class="lead reveal in">Processing is a programming language built just for art, animation, and visual ideas. Every sketch below runs live, right on this page, using p5.js — the official free web version of Processing made by the same team.</p>
+  </div>
+</header>
+
+<main class="tech-shell">
+
+  <section class="tech-section reveal" id="install" style="padding-top:10px">
+    <div class="glass" style="padding:34px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(90,160,250,.06))">
+      <div>
+        <span class="eyebrow-pill" style="margin-bottom:12px"><i data-lucide="sparkles" style="width:12px;height:12px"></i> No install needed here</span>
+        <h2 style="font-size:26px">Every lesson runs live on this page.</h2>
+        <p style="color:var(--muted);margin-top:8px;max-width:480px">Want the full desktop app for bigger projects? Processing is free to download too — same ideas, a few extra features.</p>
+      </div>
+      <a href="https://processing.org/download" target="_blank" rel="noopener" class="btn btn-primary" style="white-space:nowrap"><i data-lucide="download" style="width:16px;height:16px"></i> Get Processing (optional)</a>
+    </div>
+  </section>
+
+  <section class="tech-section reveal" id="basics">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="shapes" style="width:12px;height:12px"></i> Six fun sketches</span><h2>Code, meet canvas.</h2><p>Pick a tab, read the code, then watch the live preview — change a number in your imagination and guess what happens before you check the real app.</p></div>
+    <div class="lesson-tabs" id="procTabs"></div>
+    <div class="lesson-body glass" id="procBody"></div>
+  </section>
+
+  <section class="tech-section reveal" id="ideas">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="lightbulb" style="width:12px;height:12px"></i> Keep exploring</span><h2>Ideas for your own sketch.</h2></div>
+    <ol class="step-list">
+      <li><b>Remix a lesson.</b> Copy any code above into the InclusiveCode Academy editor and change the colors, sizes, or speed.</li>
+      <li><b>Combine two ideas.</b> What happens if the bouncing ball also changes color with sin(frameCount)?</li>
+      <li><b>Add more shapes.</b> rect(), triangle(), line(), and arc() all work exactly like ellipse().</li>
+      <li><b>React to clicks.</b> The mousePressed() function runs once every time you click — try changing the background color inside it.</li>
+    </ol>
+  </section>
+
+  <div class="glass reveal" style="padding:30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin:20px 0 50px">
+    <div><h3>Want a full code editor with an AI mentor?</h3><p style="color:var(--muted);margin-top:6px">InclusiveCode Academy has a live Processing/p5.js editor, a book library, and a friendly AI that explains your bugs.</p></div>
+    <a href="/academy.html" class="btn btn-primary">Open InclusiveCode Academy <i data-lucide="arrow-right" style="width:15px;height:15px"></i></a>
+  </div>
+</main>
+
+<footer class="tech-footer tech-shell">
+  <div class="row">
+    <span class="status-badge"><span class="dot"></span> Every sketch below is real, running p5.js</span>
+    <a href="/tech/index.html" style="color:var(--muted);font-size:13px">← Back to Tech Hub</a>
+  </div>
+</footer>
+
+<script src="/tech/theme.js"></script>
+<script src="/tech/processing-lessons-data.js"></script>
+<script src="/tech/processing.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

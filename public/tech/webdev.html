@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Web Development Course | Tech Hub</title>
+<meta name="description" content="Learn HTML, CSS, and JavaScript with a live code editor and instant preview at every step." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/tech/theme.css" />
+<link rel="stylesheet" href="/tech/circuit.css" />
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="tech-body">
+
+<nav class="tech-nav">
+  <div class="brand"><span class="dot"></span> Tech Hub</div>
+  <a href="/" class="home-btn"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> OpenLearn World</a>
+  <div class="crumbs"><a href="/tech/index.html">Tech Hub</a> <i data-lucide="chevron-right" style="width:13px;height:13px"></i> <span style="color:var(--ink)">Web Development</span></div>
+  <div class="links">
+    <a href="/tech/webdev.html" class="active">Web Dev</a>
+    <a href="/academy.html">Academy</a>
+  </div>
+</nav>
+
+<header class="tech-hero" style="padding:70px 0 40px">
+  <div class="aura"><span></span><span></span><span></span></div>
+  <div class="tech-shell" style="position:relative;z-index:1">
+    <span class="eyebrow-pill reveal in"><span class="pulse"></span> Course &middot; 8 lessons &middot; live editor</span>
+    <h1 class="reveal in" style="font-size:clamp(32px,4.6vw,54px)">Build with <em>HTML, CSS & JS</em>.</h1>
+    <p class="lead reveal in">Every lesson has a real code editor and a real live preview — edit the code, hit Run, see it change instantly. No installs needed to start.</p>
+  </div>
+</header>
+
+<main class="tech-shell">
+  <section class="tech-section reveal" id="lessons" style="padding-top:10px">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="code-2" style="width:12px;height:12px"></i> Learn by editing</span><h2>Change the code. Watch it happen.</h2><p>Two lessons include an interactive diagram — the box model and flexbox — because those two ideas explain most of CSS layout.</p></div>
+    <div class="lesson-tabs" id="lessonTabs"></div>
+    <div class="lesson-body glass" id="lessonBody"></div>
+  </section>
+
+  <section class="tech-section reveal" id="whatnext">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="rocket" style="width:12px;height:12px"></i> Beyond this course</span><h2>Where to go from here.</h2></div>
+    <div class="bento">
+      <div class="glass course-card"><div class="icon-badge">📖</div><h3>MDN Web Docs</h3><p>The definitive, free reference for HTML, CSS, and JavaScript — developer.mozilla.org.</p></div>
+      <div class="glass course-card"><div class="icon-badge">🚀</div><h3>Deploy for free</h3><p>Netlify, GitHub Pages, and Vercel all host static HTML/CSS/JS sites for free, live in minutes.</p></div>
+      <div class="glass course-card"><div class="icon-badge">🎨</div><h3>InclusiveCode Academy</h3><p>Keep building in our live Processing/p5.js and HTML workspace with an AI coding mentor.</p></div>
+    </div>
+  </section>
+
+  <div class="glass reveal" style="padding:30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin:20px 0 50px">
+    <div><h3>Ready to keep building?</h3><p style="color:var(--muted);margin-top:6px">Take these skills into the full live-editor workspace.</p></div>
+    <a href="/academy.html" class="btn btn-primary">Open InclusiveCode Academy <i data-lucide="arrow-right" style="width:15px;height:15px"></i></a>
+  </div>
+</main>
+
+<footer class="tech-footer tech-shell">
+  <div class="row">
+    <span class="status-badge"><span class="dot"></span> Every lesson runs real, editable code</span>
+    <a href="/tech/index.html" style="color:var(--muted);font-size:13px">← Back to Tech Hub</a>
+  </div>
+</footer>
+
+<script src="/tech/theme.js"></script>
+<script src="/tech/webdev-lessons-data.js"></script>
+<script src="/tech/webdev.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

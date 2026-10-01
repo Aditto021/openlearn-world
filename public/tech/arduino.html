@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Arduino Course | Tech Hub</title>
+<meta name="description" content="Learn Arduino Uno from zero: accurate pinout, power rules, and 15 real sensor circuits with wiring diagrams, code, and interactive simulation." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/tech/theme.css" />
+<link rel="stylesheet" href="/tech/circuit.css" />
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="tech-body">
+
+<nav class="tech-nav">
+  <div class="brand"><span class="dot"></span> Tech Hub</div>
+  <a href="/" class="home-btn"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> OpenLearn World</a>
+  <div class="crumbs"><a href="/tech/index.html">Tech Hub</a> <i data-lucide="chevron-right" style="width:13px;height:13px"></i> <span style="color:var(--ink)">Arduino</span></div>
+  <div class="links">
+    <a href="/tech/arduino.html" class="active">Arduino</a>
+    <a href="/academy.html">Academy</a>
+  </div>
+</nav>
+
+<header class="tech-hero" style="padding:70px 0 40px">
+  <div class="aura"><span></span><span></span><span></span></div>
+  <div class="tech-shell" style="position:relative;z-index:1">
+    <span class="eyebrow-pill reveal in"><span class="pulse"></span> 15 fun projects &middot; about 3 hours</span>
+    <h1 class="reveal in" style="font-size:clamp(32px,4.6vw,54px)">Let's make things <em>light up</em>! ⚡</h1>
+    <p class="lead reveal in">Arduino is a tiny computer board. Connect a few wires the right way, and YOU can make lights blink, buttons beep, and motors spin! Every project below shows exactly which wire goes where — just like a real Arduino kit.</p>
+  </div>
+</header>
+
+<main class="tech-shell">
+
+  <!-- SPECS -->
+  <section class="tech-section reveal" id="specs" style="padding-top:10px">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="cpu" style="width:12px;height:12px"></i> Hardware</span><h2>What's actually on the board.</h2></div>
+    <div class="spec-grid">
+      <div class="glass spec-card"><span class="spec-label">Microcontroller</span><span class="spec-value">ATmega328P</span></div>
+      <div class="glass spec-card"><span class="spec-label">Clock speed</span><span class="spec-value">16 MHz</span></div>
+      <div class="glass spec-card"><span class="spec-label">Operating voltage</span><span class="spec-value">5 V</span></div>
+      <div class="glass spec-card"><span class="spec-label">Input voltage (VIN, recommended)</span><span class="spec-value">7&ndash;12 V</span></div>
+      <div class="glass spec-card"><span class="spec-label">Digital I/O pins</span><span class="spec-value">14 (6 give PWM)</span></div>
+      <div class="glass spec-card"><span class="spec-label">Analog input pins</span><span class="spec-value">6 (A0&ndash;A5)</span></div>
+      <div class="glass spec-card"><span class="spec-label">DC current per I/O pin</span><span class="spec-value">20 mA recommended (40 mA absolute max)</span></div>
+      <div class="glass spec-card"><span class="spec-label">Flash / SRAM / EEPROM</span><span class="spec-value">32 KB / 2 KB / 1 KB</span></div>
+    </div>
+    <div class="glass" style="padding:16px 20px;margin-top:14px;border-left:3px solid var(--danger)">
+      <b style="color:var(--danger)">⚠ Safety rule #1:</b> <span style="color:var(--ink-soft)">never draw more than 20 mA from a single I/O pin &mdash; a quick blink demo is fine, but for anything long-running, wire a small resistor in series with the LED to protect both the LED and the board. Never connect a pin directly to 5V or GND without a load &mdash; that's a short circuit and can damage the board.</span>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE PINOUT -->
+  <section class="tech-section reveal" id="pinout">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="layout" style="width:12px;height:12px"></i> Interactive diagram</span><h2>Click any pin to see what it does.</h2><p>Every pin is exactly where it is on a real Uno R3. Rotate the 3D board with your mouse/finger, or switch to the flat schematic &mdash; both are click-to-inspect.</p></div>
+    <div class="view-toggle">
+      <button class="view-toggle-btn active" data-view="3d" id="viewBtn3d"><i data-lucide="box" style="width:13px;height:13px"></i> 3D model</button>
+      <button class="view-toggle-btn" data-view="2d" id="viewBtn2d"><i data-lucide="layout-template" style="width:13px;height:13px"></i> Flat schematic</button>
+      <span class="drag-hint" id="dragHint"><i data-lucide="rotate-3d" style="width:13px;height:13px"></i> Drag to rotate &middot; scroll to zoom</span>
+    </div>
+    <div class="board-wrap glass">
+      <div id="view3d" class="board-stage">
+        <div id="threeMount" class="three-mount"></div>
+        <div class="three-loading" id="threeLoading">Loading 3D model&hellip;</div>
+      </div>
+      <svg id="unoSvg" viewBox="0 0 760 420" class="board-svg" style="display:none">
+        <rect x="40" y="40" width="680" height="340" rx="14" fill="#0b3d27" stroke="#0f5c3a" stroke-width="2"/>
+        <rect x="40" y="40" width="680" height="340" rx="14" fill="url(#pcbsheen)" opacity="0.5"/>
+        <defs><linearGradient id="pcbsheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.08"/><stop offset="0.5" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+        <rect x="20" y="150" width="40" height="60" rx="4" fill="#c7cdd9"/>
+        <text x="40" y="145" text-anchor="middle" class="board-label">USB</text>
+        <rect x="660" y="330" width="50" height="34" rx="6" fill="#1a1a1a"/>
+        <circle cx="685" cy="347" r="9" fill="#333"/>
+        <text x="685" y="378" text-anchor="middle" class="board-label">Barrel jack</text>
+        <rect x="330" y="150" width="100" height="70" fill="#111" stroke="#333"/>
+        <text x="380" y="190" text-anchor="middle" fill="#8993a8" font-size="10" class="mono">ATmega328P</text>
+        <circle cx="245" cy="120" r="10" fill="#333" stroke="#555"/>
+        <text x="245" y="105" text-anchor="middle" class="board-label">RESET</text>
+        <circle id="pinLED13" cx="470" cy="120" r="5" fill="#fbbf24" opacity="0.3"/>
+        <text x="470" y="105" text-anchor="middle" class="board-label" font-size="9">L (D13)</text>
+
+        <!-- Top header: digital pins -->
+        <g id="digitalPins"></g>
+        <!-- Bottom header: power + analog -->
+        <g id="powerPins"></g>
+        <g id="analogPins"></g>
+      </svg>
+      <div class="pin-info glass" id="pinInfo">
+        <span class="eyebrow-pill" style="margin-bottom:10px"><i data-lucide="mouse-pointer-click" style="width:11px;height:11px"></i> Pin details</span>
+        <h3 id="pinInfoName">Hover or tap a pin</h3>
+        <p id="pinInfoDesc" style="color:var(--muted);font-size:13.5px;margin-top:6px">Every pin is interactive &mdash; try clicking <b class="mono" style="color:var(--accent)">A4</b> or <b class="mono" style="color:var(--accent)">~D9</b> on the board.</p>
+        <div id="pinInfoTags" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GETTING STARTED -->
+  <section class="tech-section reveal" id="setup">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="download" style="width:12px;height:12px"></i> Setup</span><h2>Get your first sketch running.</h2></div>
+    <ol class="step-list">
+      <li><b>Install the Arduino IDE.</b> Download the free official IDE from <span class="mono">arduino.cc/en/software</span> for Windows, macOS, or Linux.</li>
+      <li><b>Plug in your Uno</b> via USB. Windows/macOS install drivers automatically; on Linux you may need to add your user to the <span class="mono">dialout</span> group.</li>
+      <li><b>Select your board.</b> In the IDE: <span class="mono">Tools → Board → Arduino Uno</span>.</li>
+      <li><b>Select your port.</b> <span class="mono">Tools → Port</span> &mdash; pick the one that appears only while the Uno is plugged in.</li>
+      <li><b>Upload Blink.</b> Open <span class="mono">File → Examples → 01.Basics → Blink</span>, then click <b>Upload</b> (→). The onboard "L" LED near pin 13 should start blinking.</li>
+    </ol>
+  </section>
+
+  <!-- LESSONS -->
+  <section class="tech-section reveal" id="lessons">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="git-branch" style="width:12px;height:12px"></i> 15 circuits</span><h2>Wire it, run it, understand it.</h2><p>Each lesson has the exact wiring, the exact code, and where possible, a live simulator so you can see the behavior before touching real hardware.</p></div>
+    <div id="progressTracker"></div>
+    <div class="lesson-tabs" id="lessonTabs"></div>
+    <div class="lesson-body glass" id="lessonBody"></div>
+  </section>
+
+  <!-- TROUBLESHOOTING -->
+  <section class="tech-section reveal" id="troubleshoot">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="life-buoy" style="width:12px;height:12px"></i> When it doesn't work</span><h2>Troubleshooting checklist.</h2></div>
+    <div class="bento">
+      <div class="glass course-card"><div class="icon-badge">🔌</div><h3>Nothing uploads</h3><p>Wrong board/port selected, a bad USB cable (some are charge-only), or another program has the port open. Unplug/replug and reselect the port.</p></div>
+      <div class="glass course-card"><div class="icon-badge">💡</div><h3>LED doesn't light</h3><p>LEDs are polarized &mdash; the longer leg (anode) goes toward the resistor/pin, the shorter leg (cathode) toward GND. Flip it if it's dark.</p></div>
+      <div class="glass course-card"><div class="icon-badge">📟</div><h3>Sensor reads garbage</h3><p>Open <span class="mono">Tools → Serial Monitor</span> and match the baud rate to your <span class="mono">Serial.begin()</span> call &mdash; a mismatch prints noise.</p></div>
+      <div class="glass course-card"><div class="icon-badge">🔥</div><h3>Something got hot</h3><p>Unplug immediately. This almost always means a short circuit (pin wired straight to GND) or a reversed power connection. Recheck against the diagram before reconnecting.</p></div>
+    </div>
+  </section>
+
+  <div class="glass reveal" style="padding:30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin:20px 0 50px">
+    <div><h3>More tracks are on the way</h3><p style="color:var(--muted);margin-top:6px">ESP32, Blender, web development, and game dev are next up in the Tech Hub.</p></div>
+    <a href="/tech/index.html" class="btn btn-primary">Back to Tech Hub <i data-lucide="arrow-right" style="width:15px;height:15px"></i></a>
+  </div>
+</main>
+
+<footer class="tech-footer tech-shell">
+  <div class="row">
+    <span class="status-badge"><span class="dot"></span> Diagrams verified against Arduino Uno R3 reference design</span>
+    <a href="/tech/index.html" style="color:var(--muted);font-size:13px">← Back to Tech Hub</a>
+  </div>
+</footer>
+
+<script src="/tech/theme.js"></script>
+<script src="/tech/pinout-data.js"></script>
+<script src="/tech/pin-info-panel.js"></script>
+<script src="/tech/arduino-pinout.js"></script>
+<script src="/tech/lessons-data.js"></script>
+<script src="/tech/lessons.js"></script>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module" src="/tech/arduino-3d.js"></script>
+<script>
+lucide.createIcons();
+document.getElementById('viewBtn3d').addEventListener('click', () => setBoardView('3d'));
+document.getElementById('viewBtn2d').addEventListener('click', () => setBoardView('2d'));
+function setBoardView(mode) {
+  document.getElementById('viewBtn3d').classList.toggle('active', mode === '3d');
+  document.getElementById('viewBtn2d').classList.toggle('active', mode === '2d');
+  document.getElementById('view3d').style.display = mode === '3d' ? '' : 'none';
+  document.getElementById('unoSvg').style.display = mode === '2d' ? '' : 'none';
+  document.getElementById('dragHint').style.display = mode === '3d' ? '' : 'none';
+}
+</script>
+</body>
+</html>

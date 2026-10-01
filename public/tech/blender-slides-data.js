@@ -1,0 +1,133 @@
+// Verbatim transcription of The Tech Academy's 3 "Blender Basics" slide decks
+// (1st, 2nd, 3rd), in original order. Titles and step instructions are kept
+// word-for-word as they appear in the real slides. `dots` and `panels` map
+// each slide's decorative corner dots and annotated screenshot callouts.
+const BLENDER_SLIDES = [
+  { deck: 1, kind: 'cover', title: 'Animation', subtitle: 'Blender Basics — Deck 1' },
+  { deck: 1, kind: 'content', title: 'Navigating in Blender', art: 'nav', dots: 'sage', bullets: [
+    'Rotate view → Hold middle mouse button + move your mouse',
+    'Zoom in/out → Scroll the mouse wheel',
+    'Move view (pan) → Shift + scroll wheel press',
+    'Reset view → Press Numpad 1, 3, 7 for front, side, top views',
+  ]},
+  { deck: 1, kind: 'content', title: 'Starting the Monopoly House', art: 'house', dots: 'sage', panels: [{ border: 'orange' }], bullets: [
+    'Select your Cube',
+    'Press Tab → Switch to Edit Mode',
+    'Press Ctrl + R (Loop Cut)',
+    'Move mouse → Yellow line appears',
+    'Right-click → Place the cut at the center',
+    'Again right click to set the location of the edge',
+  ]},
+  { deck: 1, kind: 'content', title: 'Making the Roof', art: 'house', dots: 'gold', panels: [{ border: 'yellow' }], bullets: [
+    'Press 2 (Edge Select Mode)',
+    'Select the top center edge',
+    'Press G (Grab tool), then Z → Move upward on the Z-axis',
+    'Now the roof shape appears',
+  ]},
+  { deck: 1, kind: 'content', title: 'Making the Roof', art: 'house', dots: 'gold', panels: [{ border: 'yellow' }], bullets: [
+    'Switch to Face Select Mode (3)',
+    'Rotate view to Bottom',
+    'Hold Shift → Select bottom faces',
+    'Press E (Extrude) → Pull down',
+    'Press S (Scale) → Shrink a little',
+    'This makes the base of your Monopoly house',
+  ]},
+  { deck: 1, kind: 'content', title: 'Making a Simple Table', art: 'table', dots: 'gold', panels: [{ border: 'orange' }], bullets: [
+    'Select a Cube (just like we did before).',
+    'Press S then Z → Scale in the Z axis (make it thin like a tabletop).',
+    'Press S then X → Scale in the X axis (stretch it into a wide table shape)',
+  ]},
+  { deck: 1, kind: 'content', title: 'Adding Table Legs', art: 'table', dots: 'gold', panels: [{ border: 'orange' }], bullets: [
+    'Press tab (Switch to edit mode)',
+    'Press Ctrl + R (Loop Cut).',
+    'Add 4 loop cuts',
+    'Right-click to place the cuts evenly.',
+    'Now you see 4 smaller faces at the corners (these will become legs).',
+  ]},
+  { deck: 1, kind: 'content', title: 'Extruding the Legs', art: 'table', dots: 'gold', panels: [{ border: 'orange' }, { border: 'yellow' }], bullets: [
+    'Switch to Face Select Mode (3).',
+    'Select the 4 corner faces (hold Shift while selecting).',
+    'Press E (Extrude) → Pull the faces downward to create table legs.',
+    'Adjust height until it looks like a small table.',
+  ]},
+  { deck: 1, kind: 'thanks', title: 'Thank You!', subtitle: 'End of Deck 1' },
+
+  { deck: 2, kind: 'cover', title: 'Animation', subtitle: 'Blender Basics — Deck 2' },
+  { deck: 2, kind: 'content', title: 'Making a Simple Chair', art: 'chair', dots: 'sage', panels: [{ border: 'coral' }], bullets: [
+    'Select the Cube.',
+    'Press S + Z → Scale it thinner (this becomes the seat).',
+    'Press Tab → Enter Edit Mode.',
+    'Press Ctrl + R → Add a loop cut across the middle (for structure).',
+    'This helps make faces for the backrest & legs.',
+  ]},
+  { deck: 2, kind: 'content', title: 'Making a Simple Chair', art: 'chair', dots: 'sage', panels: [{ border: 'orange' }], bullets: [
+    'Select the back face of the seat.',
+    'Press E (Extrude) → Pull it upwards in Z axis.',
+    'Now you have a seat + backrest.',
+    'Rotate to bottom view.',
+    'Select the 4 small faces at the corners (after loop cut).',
+    'Press E (Extrude) → Pull them downward in Z → forms legs!',
+  ]},
+  { deck: 2, kind: 'content', title: 'Pen Holder with Pen', art: 'pen', dots: 'gold', panels: [{ border: 'orange' }], bullets: [
+    'Press Shift + A → Go to Mesh → Cylinder',
+    'This creates the cup holder base.',
+    'Press Tab → Switch to Edit Mode.',
+    'Press 3 → Activate Face Select Mode.',
+    'Scale the cylinder a little wider, press (S).',
+  ]},
+  { deck: 2, kind: 'content', title: 'Hollow the Cup', art: 'pen', dots: 'gold', panels: [{ border: 'yellow' }, { border: 'orange' }], bullets: [
+    'Select the top face of the cylinder.',
+    'Press I (Inset) → A smaller circle appears inside.',
+    'Press X → Choose Delete Face.',
+    'Now your cylinder is hollow, like a cup.',
+  ]},
+  { deck: 2, kind: 'content', title: 'Making the Pen', art: 'pen', dots: 'gold', panels: [{ border: 'orange' }, { border: 'yellow' }], panelLayout: 'row', bullets: [
+    'Press Shift + A → Mesh → Cylinder',
+    'A cylinder appears in your scene.',
+    'Press S → Scale overall size.',
+    'Press S + Z → Make it long and narrow (like a pen).',
+    'Press Tab → Enter Edit Mode.',
+    'Press Ctrl + R → Add a loop cut.',
+    'Move the edge near the top of the cylinder (this helps shape the pen tip).',
+    'Select the top face and scale it (s).',
+  ]},
+  { deck: 2, kind: 'thanks', title: 'Thank You!', subtitle: 'End of Deck 2' },
+
+  { deck: 3, kind: 'cover', title: 'Animation', subtitle: 'Blender Basics — Deck 3' },
+  { deck: 3, kind: 'content', title: 'Making a Lamp', art: 'lamp', dots: 'sage', panels: [{ border: 'yellow' }, { border: 'yellow' }], bullets: [
+    'Press Shift + A → Mesh → Cylinder',
+    'Press Tab → Edit Mode → 3 (Face Select)',
+    'Go to Bottom View → Select bottom face',
+    'E → S (Extrude + Scale) → Make base wider',
+    'E → G → Z → Pull face down to make thickness',
+    'Tip: Use Z-axis moves to keep it flat!',
+  ]},
+  { deck: 3, kind: 'content', title: 'Shape the Top Part', art: 'lamp', dots: 'sage', panels: [{ border: 'yellow' }, { border: 'orange' }], bullets: [
+    'Select Top Face',
+    'Press E → Extrude upward',
+    'Press S → Scale smaller',
+    'Press G + Z → Move up',
+    'Repeat E + S to shape the lamp head',
+  ]},
+  { deck: 3, kind: 'content', title: 'Coloring the Lamp', art: 'lamp', dots: 'gold', panels: [{ border: 'yellow', badge: '1' }, { border: 'coral', badge: '2' }, { border: 'orange', badge: '3' }], bullets: [
+    'In Edit Mode',
+    'Hold Alt → Select the top face loop',
+    'Hold Shift + Alt → Add selection if needed',
+    'Press P → Selection → Separates the top (lampshade)',
+    'Tip: "P → Selection" makes a new object from faces!',
+  ]},
+  { deck: 3, kind: 'content', title: 'Add Color to Top', art: 'lamp', dots: 'gold', panels: [{ border: 'yellow' }], bullets: [
+    'Press Tab → Go to Object Mode',
+    'Now top part and bottom part are separate objects',
+    'Select Top (lampshade)',
+    'Go to Material Properties (red sphere icon)',
+    'Press New → Base Color → Pick a color (e.g. Yellow/White)',
+  ]},
+  { deck: 3, kind: 'content', title: 'Add Color to Bottom', art: 'lamp', dots: 'gold', panels: [{ border: 'coral' }], bullets: [
+    'Select Bottom (lamp stand)',
+    'Add a new Material',
+    'Change Base Color same way (e.g. Black, Gray, Wood color)',
+  ]},
+  { deck: 3, kind: 'special', title: 'Make Your Favourite Thing in Blender!', subtitle: 'You’ve got all the moves — now go build something YOU dreamed up.' },
+  { deck: 3, kind: 'thanks', title: 'Thank You!', subtitle: 'End of Deck 3' },
+];

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ESP32 Course | Tech Hub</title>
+<meta name="description" content="Learn ESP32 from zero: accurate DevKit V1 pinout, 3.3V power rules, real sensor circuits, and a Wi-Fi web server project." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/tech/theme.css" />
+<link rel="stylesheet" href="/tech/circuit.css" />
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="tech-body">
+
+<nav class="tech-nav">
+  <div class="brand"><span class="dot"></span> Tech Hub</div>
+  <a href="/" class="home-btn"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> OpenLearn World</a>
+  <div class="crumbs"><a href="/tech/index.html">Tech Hub</a> <i data-lucide="chevron-right" style="width:13px;height:13px"></i> <span style="color:var(--ink)">ESP32</span></div>
+  <div class="links">
+    <a href="/tech/arduino.html">Arduino</a>
+    <a href="/tech/esp32.html" class="active">ESP32</a>
+    <a href="/academy.html">Academy</a>
+  </div>
+</nav>
+
+<header class="tech-hero" style="padding:70px 0 40px">
+  <div class="aura"><span></span><span></span><span></span></div>
+  <div class="tech-shell" style="position:relative;z-index:1">
+    <span class="eyebrow-pill reveal in"><span class="pulse"></span> 7 fun projects &middot; about 2 hours</span>
+    <h1 class="reveal in" style="font-size:clamp(32px,4.6vw,54px)">Arduino's <em>Wi-Fi</em> cousin! 📶</h1>
+    <p class="lead reveal in">The ESP32 board can do everything Arduino can do — PLUS it can connect to the internet! One important rule to remember: ESP32 likes gentler power than Arduino, so we'll show you exactly how to keep it safe and happy.</p>
+  </div>
+</header>
+
+<main class="tech-shell">
+
+  <section class="tech-section reveal" id="specs" style="padding-top:10px">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="cpu" style="width:12px;height:12px"></i> Hardware</span><h2>What's actually on the board.</h2></div>
+    <div class="spec-grid">
+      <div class="glass spec-card"><span class="spec-label">Processor</span><span class="spec-value">Xtensa dual-core, up to 240 MHz</span></div>
+      <div class="glass spec-card"><span class="spec-label">Wireless</span><span class="spec-value">Wi-Fi b/g/n (2.4GHz) + Bluetooth 4.2</span></div>
+      <div class="glass spec-card"><span class="spec-label">Logic voltage</span><span class="spec-value">3.3 V (not 5V tolerant)</span></div>
+      <div class="glass spec-card"><span class="spec-label">USB/VIN input</span><span class="spec-value">5 V</span></div>
+      <div class="glass spec-card"><span class="spec-label">ADC</span><span class="spec-value">2× 12-bit (0–4095), ADC1 + ADC2</span></div>
+      <div class="glass spec-card"><span class="spec-label">True analog out (DAC)</span><span class="spec-value">2× 8-bit (GPIO25, GPIO26)</span></div>
+      <div class="glass spec-card"><span class="spec-label">Flash / SRAM</span><span class="spec-value">4 MB (typical) / 520 KB</span></div>
+      <div class="glass spec-card"><span class="spec-label">Reserved GPIOs</span><span class="spec-value">6–11 (internal flash — never use)</span></div>
+    </div>
+    <div class="glass" style="padding:16px 20px;margin-top:14px;border-left:3px solid var(--danger)">
+      <b style="color:var(--danger)">⚠ The #1 ESP32 mistake:</b> <span style="color:var(--ink-soft)">wiring a 5V sensor signal straight into a GPIO. Arduino pins tolerate that; ESP32 pins can be permanently damaged by it. If a module only outputs 5V logic, use a level shifter or a resistor voltage divider.</span>
+    </div>
+  </section>
+
+  <section class="tech-section reveal" id="pinout">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="layout" style="width:12px;height:12px"></i> Interactive diagram</span><h2>Click any pin to see what it does.</h2><p>Based on the widely-used DOIT DevKit V1 (30-pin) layout — exact silkscreen order varies slightly by manufacturer, but every pin’s electrical behavior below is true of any ESP32.</p></div>
+    <div class="view-toggle">
+      <button class="view-toggle-btn active" data-view="3d" id="viewBtn3d"><i data-lucide="box" style="width:13px;height:13px"></i> 3D model</button>
+      <button class="view-toggle-btn" data-view="2d" id="viewBtn2d"><i data-lucide="layout-template" style="width:13px;height:13px"></i> Flat schematic</button>
+      <span class="drag-hint" id="dragHint"><i data-lucide="rotate-3d" style="width:13px;height:13px"></i> Drag to rotate &middot; scroll to zoom</span>
+    </div>
+    <div class="board-wrap glass">
+      <div id="view3d" class="board-stage">
+        <div id="threeMount" class="three-mount"></div>
+        <div class="three-loading" id="threeLoading">Loading 3D model&hellip;</div>
+      </div>
+      <svg id="esp32Svg" viewBox="0 0 760 460" class="board-svg" style="display:none">
+        <rect x="270" y="30" width="220" height="400" rx="12" fill="#1a1033" stroke="#2a1a4d" stroke-width="2"/>
+        <rect x="300" y="45" width="160" height="140" rx="6" fill="#b8bec9"/>
+        <text x="380" y="120" text-anchor="middle" fill="#1a1033" font-size="11" class="mono">ESP32 module</text>
+        <text x="380" y="136" text-anchor="middle" fill="#1a1033" font-size="9" class="mono">(RF shield)</text>
+        <rect x="340" y="380" width="80" height="40" rx="4" fill="#c7cdd9"/>
+        <text x="380" y="435" text-anchor="middle" class="board-label">Micro-USB</text>
+        <circle cx="330" cy="360" r="9" fill="#333"/><text x="330" y="345" text-anchor="middle" class="board-label" font-size="8">EN</text>
+        <circle cx="430" cy="360" r="9" fill="#333"/><text x="430" y="345" text-anchor="middle" class="board-label" font-size="8">BOOT</text>
+      </svg>
+      <div class="pin-info glass" id="pinInfo">
+        <span class="eyebrow-pill" style="margin-bottom:10px"><i data-lucide="mouse-pointer-click" style="width:11px;height:11px"></i> Pin details</span>
+        <h3 id="pinInfoName">Hover or tap a pin</h3>
+        <p id="pinInfoDesc" style="color:var(--muted);font-size:13.5px;margin-top:6px">Try clicking <b class="mono" style="color:var(--accent)">GPIO34</b> or <b class="mono" style="color:var(--accent)">GPIO2</b> on the board.</p>
+        <div id="pinInfoTags" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tech-section reveal" id="setup">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="download" style="width:12px;height:12px"></i> Setup</span><h2>Get your board talking to the Arduino IDE.</h2></div>
+    <ol class="step-list">
+      <li><b>Install the Arduino IDE</b> (same one used for Arduino boards) from <span class="mono">arduino.cc/en/software</span>, if you haven’t already.</li>
+      <li><b>Add the ESP32 board package.</b> <span class="mono">File → Preferences</span>, paste this into "Additional Board Manager URLs": <span class="mono">https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json</span></li>
+      <li><b>Install it.</b> <span class="mono">Tools → Board → Boards Manager</span>, search "esp32", install the Espressif package.</li>
+      <li><b>Select your board.</b> <span class="mono">Tools → Board → ESP32 Arduino → DOIT ESP32 DEVKIT V1</span> (or your exact model).</li>
+      <li><b>Select your port and upload.</b> Some boards need you to hold the <b>BOOT</b> button while uploading starts — if upload fails, try that.</li>
+    </ol>
+  </section>
+
+  <section class="tech-section reveal" id="lessons">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="git-branch" style="width:12px;height:12px"></i> 7 projects</span><h2>From blink to a Wi-Fi web server.</h2></div>
+    <div id="progressTracker"></div>
+    <div class="lesson-tabs" id="lessonTabs"></div>
+    <div class="lesson-body glass" id="lessonBody"></div>
+  </section>
+
+  <div class="glass reveal" style="padding:30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin:20px 0 50px">
+    <div><h3>Want the 5V fundamentals first?</h3><p style="color:var(--muted);margin-top:6px">Arduino Uno is the gentler starting point — same core concepts, more forgiving voltage rules.</p></div>
+    <a href="/tech/arduino.html" class="btn btn-primary">Go to Arduino <i data-lucide="arrow-right" style="width:15px;height:15px"></i></a>
+  </div>
+</main>
+
+<footer class="tech-footer tech-shell">
+  <div class="row">
+    <span class="status-badge"><span class="dot"></span> Pin data verified against the ESP32 technical reference</span>
+    <a href="/tech/index.html" style="color:var(--muted);font-size:13px">← Back to Tech Hub</a>
+  </div>
+</footer>
+
+<script src="/tech/theme.js"></script>
+<script src="/tech/esp32-pinout-data.js"></script>
+<script src="/tech/pin-info-panel.js"></script>
+<script src="/tech/esp32-pinout.js"></script>
+<script src="/tech/esp32-lessons-data.js"></script>
+<script src="/tech/lessons.js"></script>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module" src="/tech/esp32-3d.js"></script>
+<script>
+lucide.createIcons();
+document.getElementById('viewBtn3d').addEventListener('click', () => setBoardView('3d'));
+document.getElementById('viewBtn2d').addEventListener('click', () => setBoardView('2d'));
+function setBoardView(mode) {
+  document.getElementById('viewBtn3d').classList.toggle('active', mode === '3d');
+  document.getElementById('viewBtn2d').classList.toggle('active', mode === '2d');
+  document.getElementById('view3d').style.display = mode === '3d' ? '' : 'none';
+  document.getElementById('esp32Svg').style.display = mode === '2d' ? '' : 'none';
+  document.getElementById('dragHint').style.display = mode === '3d' ? '' : 'none';
+}
+</script>
+</body>
+</html>

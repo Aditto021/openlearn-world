@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blender Course | Tech Hub</title>
+<meta name="description" content="Learn Blender: interesting facts, a labeled interface tour, the official download, and your first steps in 3D modeling." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/tech/theme.css" />
+<link rel="stylesheet" href="/tech/circuit.css" />
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  .blender-hero-3d { position: absolute; inset: 0; z-index: 0; opacity: .85; }
+  #blenderHeroMount { width: 100%; height: 100%; }
+</style>
+</head>
+<body class="tech-body">
+
+<nav class="tech-nav">
+  <div class="brand"><span class="dot"></span> Tech Hub</div>
+  <a href="/" class="home-btn"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> OpenLearn World</a>
+  <div class="crumbs"><a href="/tech/index.html">Tech Hub</a> <i data-lucide="chevron-right" style="width:13px;height:13px"></i> <span style="color:var(--ink)">Blender</span></div>
+  <div class="links">
+    <a href="/tech/blender.html" class="active">Blender</a>
+    <a href="/academy.html">Academy</a>
+  </div>
+</nav>
+
+<header class="tech-hero" style="padding:70px 0 40px;min-height:340px">
+  <div class="aura"><span></span><span></span><span></span></div>
+  <div class="blender-hero-3d"><div id="blenderHeroMount"></div></div>
+  <div class="tech-shell" style="position:relative;z-index:1">
+    <span class="eyebrow-pill reveal in"><span class="pulse"></span> 100% free &middot; open source</span>
+    <h1 class="reveal in" style="font-size:clamp(32px,4.6vw,54px)">Model, texture, <em>render</em>.</h1>
+    <p class="lead reveal in">Blender is a complete, professional-grade 3D creation suite — and it costs nothing. Modeling, sculpting, animation, simulation, video editing, and full Python scripting, all in one free app.</p>
+  </div>
+</header>
+
+<main class="tech-shell">
+
+  <!-- FACTS -->
+  <section class="tech-section reveal" id="facts" style="padding-top:10px">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="sparkles" style="width:12px;height:12px"></i> Interesting facts</span><h2>What makes Blender different.</h2></div>
+    <div class="bento">
+      <div class="glass course-card"><div class="icon-badge">🆓</div><h3>Completely free</h3><p>No subscription, no watermark, no feature paywall — released under the GPL open-source license since 1994, maintained by the nonprofit Blender Foundation.</p></div>
+      <div class="glass course-card"><div class="icon-badge">🎬</div><h3>Full production pipeline</h3><p>Modeling, sculpting, rigging, animation, cloth/fluid/smoke simulation, VFX compositing, and video editing — in one application.</p></div>
+      <div class="glass course-card"><div class="icon-badge">🐍</div><h3>Scriptable with Python</h3><p>Nearly everything in Blender can be automated or extended with Python, powering a huge ecosystem of free and paid add-ons.</p></div>
+      <div class="glass course-card"><div class="icon-badge">☀️</div><h3>Two render engines</h3><p><b>Eevee</b> renders in real time as you work; <b>Cycles</b> is a physically-based path tracer for photorealistic final renders.</p></div>
+      <div class="glass course-card"><div class="icon-badge">🎥</div><h3>Made real films</h3><p>The Blender Foundation’s own studio has released open movies like <i>Sprite Fox</i> and <i>Charge</i> — free to watch, with source files included.</p></div>
+      <div class="glass course-card"><div class="icon-badge">⌨️</div><h3>Keyboard-driven</h3><p>G (grab), R (rotate), S (scale), Tab (edit mode) — a handful of shortcuts cover most of daily modeling work.</p></div>
+    </div>
+  </section>
+
+  <!-- INTERFACE TOUR -->
+  <section class="tech-section reveal" id="interface">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="layout-dashboard" style="width:12px;height:12px"></i> Interface tour</span><h2>Where everything lives.</h2><p>This is Blender’s default layout — every panel here is real and exactly where you’ll find it after installing.</p></div>
+    <div class="glass" style="padding:20px">
+      <svg viewBox="0 0 800 460" style="width:100%;height:auto">
+        <rect x="0" y="0" width="800" height="30" fill="#232323"/>
+        <text x="14" y="20" fill="#bbb" font-size="12" font-family="monospace">File  Edit  Render  Window  Help &nbsp;&nbsp;&nbsp; [ Layout | Modeling | Sculpting | Animation | Shading | Rendering ]</text>
+
+        <rect x="0" y="30" width="600" height="370" fill="#3d3d3d"/>
+        <line x1="0" y1="215" x2="600" y2="215" stroke="#555" stroke-width="1"/>
+        <text x="14" y="50" fill="#6ee7ff" font-size="12" font-family="monospace" font-weight="bold">3D VIEWPORT</text>
+        <text x="14" y="68" fill="#999" font-size="10" font-family="monospace">Middle-click drag to orbit &middot; scroll to zoom</text>
+        <circle cx="300" cy="130" r="55" fill="none" stroke="#fb923c" stroke-width="2"/>
+        <rect x="245" y="75" width="110" height="110" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="14" y="235" fill="#6ee7ff" font-size="12" font-family="monospace" font-weight="bold">TIMELINE</text>
+        <line x1="20" y1="270" x2="580" y2="270" stroke="#777" stroke-width="2"/>
+        <rect x="20" y="264" width="4" height="12" fill="#6ee7ff"/>
+
+        <rect x="600" y="30" width="200" height="215" fill="#333"/>
+        <text x="612" y="50" fill="#6ee7ff" font-size="12" font-family="monospace" font-weight="bold">OUTLINER</text>
+        <text x="612" y="70" fill="#999" font-size="10" font-family="monospace">▸ Scene Collection</text>
+        <text x="622" y="86" fill="#ccc" font-size="10" font-family="monospace">• Camera</text>
+        <text x="622" y="102" fill="#ccc" font-size="10" font-family="monospace">• Light</text>
+        <text x="622" y="118" fill="#fb923c" font-size="10" font-family="monospace">• Cube</text>
+
+        <rect x="600" y="245" width="200" height="155" fill="#2d2d2d"/>
+        <text x="612" y="265" fill="#6ee7ff" font-size="12" font-family="monospace" font-weight="bold">PROPERTIES</text>
+        <text x="612" y="285" fill="#999" font-size="10" font-family="monospace">🔧 Modifiers</text>
+        <text x="612" y="301" fill="#999" font-size="10" font-family="monospace">🎨 Material</text>
+        <text x="612" y="317" fill="#999" font-size="10" font-family="monospace">📷 Render</text>
+
+        <rect x="0" y="400" width="800" height="60" fill="#232323"/>
+        <text x="14" y="425" fill="#6ee7ff" font-size="12" font-family="monospace" font-weight="bold">HEADER / STATUS BAR</text>
+        <text x="14" y="443" fill="#999" font-size="10" font-family="monospace">Object Mode ▾ &nbsp; | &nbsp; Vertices: 8  Faces: 6 &nbsp; | &nbsp; collections, stats, and mode switch live here</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section class="tech-section reveal" id="download">
+    <div class="glass" style="padding:34px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(251,146,60,.08),rgba(244,63,94,.06))">
+      <div>
+        <span class="eyebrow-pill" style="margin-bottom:12px"><i data-lucide="download" style="width:12px;height:12px"></i> Official download</span>
+        <h2 style="font-size:26px">Get Blender, free.</h2>
+        <p style="color:var(--muted);margin-top:8px;max-width:480px">Available for Windows, macOS, and Linux directly from the Blender Foundation. No account or payment required.</p>
+      </div>
+      <a href="https://www.blender.org/download/" target="_blank" rel="noopener" class="btn btn-primary" style="white-space:nowrap"><i data-lucide="download" style="width:16px;height:16px"></i> Download at blender.org</a>
+    </div>
+  </section>
+
+  <!-- LESSONS (from The Tech Academy's Blender Basics slide decks) -->
+  <section class="tech-section reveal" id="slides">
+    <div class="section-head"><span class="eyebrow-pill"><i data-lucide="presentation" style="width:12px;height:12px"></i> The real class slides</span><h2>Open Blender, then click Next!</h2><p>24 slides, straight from the course — open Blender on your computer, keep this open next to it, and press <b>Next</b> after each step. Use the ← → arrow keys too!</p></div>
+    <div class="slide-viewer">
+      <div class="slide-frame"><div class="slide-stage" id="slideStage"></div></div>
+      <div class="slide-controls">
+        <button class="slide-nav-btn" id="slidePrev"><i data-lucide="arrow-left" style="width:14px;height:14px"></i> Back</button>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+          <span class="slide-counter" id="slideCounter"></span>
+          <div class="slide-dots" id="slideDots"></div>
+        </div>
+        <button class="slide-nav-btn" id="slideNext">Next <i data-lucide="arrow-right" style="width:14px;height:14px"></i></button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="tech-footer tech-shell">
+  <div class="row">
+    <span class="status-badge"><span class="dot"></span> Lessons sourced from The Tech Academy's Blender Basics slides</span>
+    <a href="/tech/index.html" style="color:var(--muted);font-size:13px">← Back to Tech Hub</a>
+  </div>
+</footer>
+
+<script src="/tech/theme.js"></script>
+<script src="/tech/blender-slides-data.js"></script>
+<script src="/tech/blender-slides.js"></script>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module" src="/tech/blender-hero.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>
