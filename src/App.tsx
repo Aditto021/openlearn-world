@@ -209,15 +209,13 @@ function Home() {
   </>;
 }
 function Subjects() {
-  const navigate = useNavigate();
   const allTiles = useMemo(() => [
     ...techCategories.map((c) => ({ id: c.name, emoji: c.emoji, title: c.name, blurb: c.description, tone: c.tone, href: c.href, count: null as number | null })),
     ...categories.map((c) => ({ id: c.name, emoji: c.emoji, title: c.name, blurb: c.description, tone: c.tone, href: `/learn/${c.name.toLowerCase()}`, count: lessons.filter((l) => l.category === c.name).length }))
   ], []);
   const surpriseMe = () => {
-    const pick = allTiles[Math.floor(Math.random() * allTiles.length)];
-    if (pick.href.startsWith('/tech/') || pick.href.startsWith('/academy')) window.location.href = pick.href;
-    else navigate(pick.href);
+    const pick = techCategories[Math.floor(Math.random() * techCategories.length)];
+    window.location.href = pick.href;
   };
   return <section className="page-section subjects-page">
     <div className="subjects-hero">
