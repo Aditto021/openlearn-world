@@ -1,7 +1,7 @@
 const WEBDEV_LESSONS = [
   {
     id: 'first-page', icon: '📄', title: 'Your First HTML Page',
-    summary: 'Every web page starts with the same skeleton: a doctype, an <html> root, a <head> for metadata, and a <body> for what people actually see.',
+    summary: 'Every web page starts with the same skeleton: a doctype, an &lt;html&gt; root, a &lt;head&gt; for metadata, and a &lt;body&gt; for what people actually see.',
     starter: `<!DOCTYPE html>
 <html>
 <head>
@@ -15,7 +15,7 @@ const WEBDEV_LESSONS = [
   },
   {
     id: 'text-structure', icon: '📝', title: 'Text & Structure',
-    summary: 'Headings (h1–h6) create hierarchy, <p> holds paragraphs, <ul>/<li> make lists, and <a href> links to anywhere on the web.',
+    summary: 'Headings (h1–h6) create hierarchy, &lt;p&gt; holds paragraphs, &lt;ul&gt;/&lt;li&gt; make lists, and &lt;a href&gt; links to anywhere on the web.',
     starter: `<!DOCTYPE html>
 <html>
 <body>
