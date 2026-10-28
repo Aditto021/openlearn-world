@@ -14,14 +14,14 @@ export const categories: { name: Category; icon: string; emoji: string; descript
   { name: 'General Knowledge', icon: 'sparkles', emoji: '✨', description: 'Fun facts that will surprise your friends!', tone: 'lavender' }
 ];
 
-export const techCategories: { name: string; emoji: string; description: string; tone: string; href: string }[] = [
-  { name: 'Arduino', emoji: '🔌', description: 'Build with real lights, buttons, and beeps you can touch!', tone: 'blue', href: '/tech/arduino.html' },
-  { name: 'ESP32', emoji: '📶', description: 'Like Arduino, but it can talk over Wi-Fi too!', tone: 'blue', href: '/tech/esp32.html' },
-  { name: 'Web Development', emoji: '🌐', description: 'Make your very own web page appear like magic!', tone: 'yellow', href: '/tech/webdev.html' },
-  { name: 'Blender 3D', emoji: '🧊', description: 'Sculpt toys, tables, and lamps in 3D — for free!', tone: 'terracotta', href: '/tech/blender.html' },
+export const techCategories: { name: string; emoji: string; logo?: string; description: string; tone: string; href: string }[] = [
+  { name: 'Arduino', emoji: '🔌', logo: 'https://cdn.simpleicons.org/arduino', description: 'Build with real lights, buttons, and beeps you can touch!', tone: 'blue', href: '/tech/arduino.html' },
+  { name: 'ESP32', emoji: '📶', logo: 'https://cdn.simpleicons.org/espressif', description: 'Like Arduino, but it can talk over Wi-Fi too!', tone: 'blue', href: '/tech/esp32.html' },
+  { name: 'Web Development', emoji: '🌐', logo: 'https://cdn.simpleicons.org/html5', description: 'Make your very own web page appear like magic!', tone: 'yellow', href: '/tech/webdev.html' },
+  { name: 'Blender 3D', emoji: '🧊', logo: 'https://cdn.simpleicons.org/blender', description: 'Sculpt toys, tables, and lamps in 3D — for free!', tone: 'terracotta', href: '/tech/blender.html' },
   { name: 'Game Development', emoji: '🎮', description: 'Learn the secret recipe behind every video game.', tone: 'lavender', href: '/tech/gamedev.html' },
-  { name: 'Roblox Studio', emoji: '🟥', description: 'Write tiny bits of code to bring your world to life.', tone: 'rose', href: '/tech/roblox.html' },
-  { name: 'Processing', emoji: '🖌️', description: 'Draw shapes and animations with code — watch them come alive instantly!', tone: 'yellow', href: '/tech/processing.html' },
+  { name: 'Roblox Studio', emoji: '🟥', logo: 'https://cdn.simpleicons.org/roblox', description: 'Write tiny bits of code to bring your world to life.', tone: 'rose', href: '/tech/roblox.html' },
+  { name: 'Processing', emoji: '🖌️', logo: 'https://cdn.simpleicons.org/p5dotjs', description: 'Draw shapes and animations with code — watch them come alive instantly!', tone: 'yellow', href: '/tech/processing.html' },
   { name: 'Canva', emoji: '🖍️', description: 'Design posters, cards, and logos in your browser — free, no install needed!', tone: 'blue', href: '/tech/canva.html' },
   { name: 'InclusiveCode Academy', emoji: '🎨', description: 'Draw with code and watch it move on screen!', tone: 'green', href: '/academy.html' }
 ];
